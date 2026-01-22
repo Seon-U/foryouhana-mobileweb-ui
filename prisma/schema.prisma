@@ -114,6 +114,7 @@ model alert {
   status      Boolean?  @default(false)
   priority    Int?      @default(0) @db.UnsignedTinyInt
   created_at  DateTime? @default(now()) @db.DateTime(6)
+  screen      String    @db.VarChar(50)
   child       child     @relation(fields: [child_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_alert_child")
 
   @@index([child_id], map: "fk_alert_child")
@@ -135,7 +136,3 @@ enum account_acc_type {
   FUND
   PENSION
 }
-
-/**
- * alert (팝업) 테이블 enum은 안했어요
- */
