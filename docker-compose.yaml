@@ -1,0 +1,19 @@
+services:
+  localdb:
+    container_name: aiappcontainer
+    image: mysql:8.0
+    ports:
+      - 3310:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --log_bin_trust_function_creators=1
+      - --default-time-zone=Asia/Seoul
+      - --innodb_ft_min_token_size=2
+    volumes:
+      - ./mysql:/var/lib/mysql
