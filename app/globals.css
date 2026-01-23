@@ -47,18 +47,35 @@
 }
 
 :root {
-  --hana-light-green: #1ea698;
-  --hana-mint: #008485;
+  --intro-red: #cd0037;
+  --text-point-red: #ff0000;
+  --badge-text-red: #e7000B;
+  --badge-bg-red:#faeaec;
   --hana-pink: #e90061;
+  --button-pink: #ff9999;
+  --hana-mint: #008485;
+  --hana-main-green: #1ea698;
+  --hana-light-mint: #0b9c97;
+  --text-bold-green: #008e71;
+  --badge-text-green: #007a55;
+  --badge-bg-green: #dff2e7;
+  --bg-light-green: #e0f2f1;
+  --complete-point-green: #00c177;
+  --complete-bg-green: #e8fff6; 
+  --hana-gray-100:#f9fafb;
+  --hana-gray-200:#ecedef;
+  --hana-gray-300:#e5e5e5;
+  --hana-gray-400:#b5b5b5;
+  --hana-gray-500:#999999;
+  --hana-gray-600:#666666;
+  --badge-text-orange:#ff8d28;
+  --badge-bg-yellow:#fff8d6;
+  --light-purple:#f0e2ff;
   --hana-brown: #ad9a5f;
-  --hana-gray: #b5b5b5;
   --hana-black: #000000;
   --hana-dark-navy: #3b4259;
   --hana-white: #edf1f2;
-  --hana-light-mint: #0b9c97;
   --hana-light-gray: #e4e9ee;
-  --hana-pastel-red: #faeaec;
-  --hana-pastel-mint: #dff2e7;
   --hana-pastel-yellow: #f4edde;
   --hana-pastel-blue: #e0e8f3;
   --hana-pastel-purple: #f1e7f3;
