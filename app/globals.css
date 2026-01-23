@@ -27,6 +27,7 @@
   --color-hana-complete-bg: #e8fff6;
 
   /* ========== Gray ========== */
+  --color-hana-gray-50: #eeeeef;
   --color-hana-gray-100: #f9fafb;
   --color-hana-gray-200: #ecedef;
   --color-hana-gray-300: #e5e5e5;
@@ -43,6 +44,7 @@
   --color-hana-dark-navy: #3b4259;
   --color-hana-white: #edf1f2;
   --color-hana-light-gray: #e4e9ee;
+  --color-hana-blue: #0062be;
 
   /* ========== Pastel ========== */
   --color-hana-pastel-yellow: #f4edde;
