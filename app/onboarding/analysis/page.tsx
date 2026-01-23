@@ -1,5 +1,3 @@
 export default function analysisInfo() {
-  return (
-    <div>analysisInfo</div>
-  );
+  return <div>analysisInfo</div>;
 }
