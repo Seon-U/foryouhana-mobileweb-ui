@@ -3,6 +3,14 @@ import { Check, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '../ui/badge';
 
+/**
+ * @page: CardVerify
+ * @description: 가입 절차에 인증 카드 컴포넌트를 구현하였습니다.
+ * 버튼을 누르면 인증 완료 상태로 전환됩니다.
+ * @author: 이정수
+ * @date: 2026-01-24
+ */
+
 type CardProps = {
   icon: LucideIcon;
   title: string;
