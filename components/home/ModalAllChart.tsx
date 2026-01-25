@@ -54,6 +54,7 @@ export default function ModalAllChart({ onClose, kids }: ModalAllChartProps) {
       <button
         type="button"
         onClick={onClose}
+        aria-label="모달 닫기"
         className="absolute inset-0 bg-hana-main/30"
       ></button>
 
