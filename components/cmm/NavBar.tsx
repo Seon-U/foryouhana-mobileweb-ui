@@ -32,7 +32,10 @@ function NavIcon({ children }: { children: ReactNode }) {
 
 export function BottomNavBar() {
   const [activeTab, setActiveTab] = useState<NavTab>('home');
-  const menuColor = activeTab === 'menu' ? '#14B8A6' : '#9CA3AF';
+  const menuColor =
+    activeTab === 'menu'
+      ? 'var(--color-hana-pastel-mint)'
+      : 'var(--color-hana-gray-400)';
 
   return (
     <nav
