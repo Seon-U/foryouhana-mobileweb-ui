@@ -67,8 +67,10 @@ export function FundListItemCard({
 
   return (
     <article
-      className={cn('relative rounded-2xl bg-white p-2.5 shadow-md', className)}
-      style={{ width: 360, height: 100 }}
+      className={cn(
+        'relative h-25 w-90 rounded-2xl bg-white p-2.5 shadow-md',
+        className,
+      )}
       aria-label="펀드 리스트 아이템"
     >
       {/* 상단: 제목 + chevron */}
