@@ -2,6 +2,7 @@
 
 import { DownloadIcon } from 'lucide-react';
 import Image from 'next/image';
+import { TIMELINE_IMAGES } from '@/constants/images';
 import { CardModal } from '../ui/CardModal';
 
 /**
@@ -55,7 +56,7 @@ export function FinancialHistoryGiftModal({
     <CardModal isOpen={isOpen} onClose={onClose}>
       <div className="relative h-107.25 w-87 overflow-visible rounded-[30px] bg-hana-white-yellow">
         <Image
-          src="/timeline/star_bg.png"
+          src={TIMELINE_IMAGES.STAR_BG}
           alt=""
           width={346}
           height={317}
@@ -69,7 +70,7 @@ export function FinancialHistoryGiftModal({
         />
 
         <Image
-          src="/timeline/icon/star.png"
+          src={TIMELINE_IMAGES.STAR_ICON}
           alt=""
           width={48}
           height={48}
@@ -89,8 +90,8 @@ export function FinancialHistoryGiftModal({
 
         <div className="-translate-x-1/2 absolute top-30 left-1/2 z-20">
           <Image
-            src="/timeline/timeline_popupImg.png"
-            alt="mother & child"
+            src={TIMELINE_IMAGES.POPUP_ILLUSTRATION}
+            alt="엄마와 자녀"
             width={220}
             height={180}
             priority
