@@ -27,21 +27,21 @@ export default function ProgressBar({ step, step2 }: Step) {
   ) => (
     <div className="w-full">
       <div
-        className={`border-b-2 ${
+        className={`border-b-2 ${ 
           status !== 'pending'
-            ? 'border-b-(--color-hana-badge-green)'
-            : 'border-b-(--color-hana-gray-500)'
+            ? 'border-b-[var(--color-hana-badge-green)]'
+            : 'border-b-[var(--color-hana-gray-500)]'
         }`}
       />
       <div className="flex justify-center gap-1 p-1">
         {status === 'completed' && (
-          <Image src={ICON_PATH} alt="" width={12} height={12} />
+          <Image src={ICON_PATH} alt="완료" width={12} height={12} />
         )}
         <p
           className={`font-hana-light text-[13px] ${
             status !== 'pending'
-              ? 'text-(--color-hana-badge-green)'
-              : 'text-(--color-hana-gray-500)'
+              ? 'text-[var(--color-hana-badge-green)]'
+              : 'text-[var(--color-hana-gray-500)]'
           }`}
         >
           {label}
