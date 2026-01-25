@@ -36,12 +36,12 @@ export default function CardTimeline({
   });
 
   return (
-    <div className="h-24.5 w-75 rounded-4xl bg-[var(--color-hana-light-green)] p-3 font-hana-regular">
+    <div className="h-24.5 w-75 rounded-4xl bg-(--color-hana-light-green) p-3 font-hana-regular">
       <div className="flex justify-between text-[16px]">
         <p>{isMessage ? '입금' : title}</p>
         <p>{isMessage && `+${movedMoney.toLocaleString()}원`}</p>
       </div>
-      <div className="text-[var(--color-hana-gray-500)] text-[13px]">
+      <div className="text-(--color-hana-gray-500) text-[13px]">
         <div className="flex gap-2">
           {formattedDate}
           <Mail size={20} />
