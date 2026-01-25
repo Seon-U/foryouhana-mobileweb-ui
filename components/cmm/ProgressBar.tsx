@@ -27,7 +27,7 @@ export default function ProgressBar({ step, step2 }: Step) {
   ) => (
     <div className="w-full">
       <div
-        className={`border-b-2 ${ 
+        className={`border-b-2 ${
           status !== 'pending'
             ? 'border-b-[var(--color-hana-badge-green)]'
             : 'border-b-[var(--color-hana-gray-500)]'
