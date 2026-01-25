@@ -15,14 +15,14 @@ import { CustomButton } from '../cmm/CustomButton';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export type Kid = {
+export type KidGiftAmount = {
   name: string;
   giftamount: number;
 };
 
 type ModalAllChartProps = {
   onClose: () => void;
-  kids: Kid[];
+  kids: KidGiftAmount[];
 };
 
 const backgroundColor = [
