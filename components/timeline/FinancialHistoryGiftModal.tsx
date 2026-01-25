@@ -20,11 +20,11 @@ import { CardModal } from '../ui/CardModal';
  *   모달 본문에 노출될 자녀 이름이다.
  *   축하 메시지 문구에 포함되어 사용자에게 개인화된 경험을 제공한다.
  *
- * - `onDownload` (() => void)
+ * - `onDownload` (() => void) (현재 미적용)
  *   금융 이력 파일 선택 또는 다운로드 이후 처리 로직을 연결하기 위한 콜백이다.
  *   파일 업로드, 검증, 서버 전송 등의 후속 작업에 활용할 수 있다.
  *
- * - `onShare` (() => void)
+ * - `onShare` (() => void) (현재 미적용)
  *   "공유하기" 버튼 클릭 시 호출되는 콜백이다.
  *   카카오톡 공유 등 외부 공유 기능과 연결하여 사용한다.
  *
@@ -40,7 +40,6 @@ interface FinancialHistoryGiftModalProps {
   isOpen: boolean;
   onClose: () => void;
   childName: string;
-  onDownload: () => void;
   onShare: () => void;
   onNext: () => void;
 }
