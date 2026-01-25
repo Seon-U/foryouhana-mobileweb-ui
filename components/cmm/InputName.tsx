@@ -56,7 +56,7 @@ export default function InputName({
         value={inputValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full border-black border-b bg-transparent pb-2 text-[16px] outline-none placeholder:text-hana-gray-400 focus:border-hana-main"
+        className="w-full border-black border-b bg-transparent pb-2 text-[16px] outline-none placeholder:text-hana-gray-400"
       />
     </div>
   );
