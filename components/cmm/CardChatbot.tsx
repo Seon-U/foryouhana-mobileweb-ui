@@ -5,9 +5,8 @@ import Image from 'next/image';
  * @page: 챗봇카드
  * @description:
  * title과 section 내용을 입력받습니다.
- * section 은 title과 description으로 구성되어 있습니다.
- * AI 오픈소스에 따라 통합해도 되겠습니다.
- * 버튼은 일단 UI만 제작하였으며, 추후 flow에서 숨기면 됩니다.
+ * isScenario로 버튼을 나타냅니다.
+ * section 은 title과 description으로 구성되어 있습니다.AI 오픈소스에 따라 통합해도 되겠습니다.
  * @author: 승빈
  * @date: 2026-01-23
  */
@@ -28,7 +27,7 @@ export default function CardChatbot({
   sections,
   isScenario = false,
 }: CardChatbotProps) {
-  const ICON_PATH = '/chatbot/icon/starbot.png';
+  const ICON_PATH = '/chatbot/icon/starbot.svg';
 
   return (
     <div className="relative pt-[20px]">

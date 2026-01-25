@@ -7,7 +7,7 @@ import Image from 'next/image';
  * ex) '가족관계증명서로\n 부모-아이를 확인해요.'
  *
  * 이미지 주소는 public 제외 /register/... 로 작성
- * ex) '/register/icon/register-heart.png'
+ * ex) '/register/icon/register-heart.svg'
  *
  * @author: 승빈
  * @date: 2026-01-23
