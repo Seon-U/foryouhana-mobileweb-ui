@@ -21,7 +21,7 @@ type Props = {
 
 export default function CardIcon({ title, content, imageSrc }: Props) {
   return (
-    <div className="flex h-[87px] w-[320px] justify-between rounded-[19px] border border-(--color-hana-pastel-green) bg-white p-3 px-4 shadow-md">
+    <div className="flex h-[87px] w-[320px] justify-between rounded-[19px] border border-[var(--color-hana-pastel-green)] bg-white p-3 px-4 shadow-md">
       <div className="w-[200px]">
         <p className="font-hana-cm text-[16px]">{title}</p>
         <p className="color-(--hana-light-gray) h-[37px] whitespace-pre-line text-[14px]">
