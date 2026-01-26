@@ -42,7 +42,7 @@ export default function RootLayout({
         className={`flex h-dvh w-screen items-center justify-center overflow-hidden bg-gray-100 antialiased`}
       >
         <UserContextProvider>
-          <div className="scrollbar-hide h-full max-h-213 w-full max-w-98.25 overflow-y-auto rounded-4xl bg-white p-3 shadow-md">
+          <div className="scrollbar-hide h-full max-h-[852px] w-full max-w-[393px] overflow-y-auto rounded-4xl bg-white p-3 shadow-md">
             {children}
           </div>
         </UserContextProvider>
