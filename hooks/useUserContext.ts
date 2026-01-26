@@ -1,0 +1,9 @@
+'use client';
+
+import { useContext } from 'react';
+import { UserContext } from './UserContextProvider';
+
+export function useUserContext() {
+  const ctx = useContext(UserContext);
+  return ctx;
+}
