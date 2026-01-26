@@ -1,6 +1,15 @@
 import { InfoIcon } from 'lucide-react';
 import { BinaryToggle } from '../../../components/cmm/BinaryToggle';
 
+/**
+ * @page: PensionSection
+ * @description: PensionSection은 온보딩 내의 플랜 수정 페이지에서 연금 저축 펀드 선택 부분을 나타내는 컴포넌트입니다.
+ * 연금 저축 펀드 사용 여부를 받습니다.
+ *
+ * @author: 이정수
+ * @date: 2026-01-26
+ */
+
 export default function PensionSection({
   select,
   onSelect,
