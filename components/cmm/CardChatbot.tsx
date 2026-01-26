@@ -39,7 +39,7 @@ export default function CardChatbot({
 
   if (!mounted) return null; // ✅ 서버 & 첫 CSR 동일
 
-  const sanitizedContent = purifierRef.current!.sanitize(content);
+  const sanitizedContent = purifierRef.current?.sanitize(content);
 
   return (
     <div className="relative pt-[20px]">
