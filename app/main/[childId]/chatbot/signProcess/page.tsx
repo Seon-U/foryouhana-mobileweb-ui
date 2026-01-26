@@ -88,10 +88,17 @@ export default function chatbotSignProcess() {
           },
         ]);
       } else {
-        // 🔥 [추가] 서버에서 받은 dbData를 세션 스토리지에 저장!
+        // 🔥  서버에서 받은 dbData를 세션 스토리지에 저장!
+        //세션 스토리지 저장 구조 개선 (childId, updated_at 포함)
         if (data.dbData) {
-          sessionStorage.setItem('giftPlan', JSON.stringify(data.dbData));
-          console.log('✅ 플랜 데이터 저장 완료:', data.dbData);
+          const sessionData = {
+            child_id: childId, // URL 파라미터에서 가져온 childId
+            updated_at: new Date().toISOString(), // 현재 시간
+            plan: data.dbData, // 서버에서 받은 추천 플랜 데이터
+          };
+
+          sessionStorage.setItem('giftPlan', JSON.stringify(sessionData));
+          console.log('✅ 플랜 데이터 저장 완료:', sessionData);
         }
 
         const summaryText = `
@@ -193,14 +200,16 @@ ${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
             )}
             <div ref={messagesEndRef} />
           </div>
-          <div className="flex w-full justify-center">
-            <CustomButton
-              preset="maingreenshort"
-              onClick={() => route.push('/onboarding/loading')}
-            >
-              채팅 완료하기
-            </CustomButton>
-          </div>
+          {!loading && (
+            <div className="flex w-full justify-center">
+              <CustomButton
+                preset="maingreenshort"
+                onClick={() => route.push('/onboarding/loading')}
+              >
+                채팅 완료하기
+              </CustomButton>
+            </div>
+          )}
         </div>
       </div>
 
