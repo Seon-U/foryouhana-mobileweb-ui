@@ -7,11 +7,12 @@ import { InputAmount, InputDay } from '@/components/cmm/InputDayAmount';
 
 export default function planEdit() {
   const [pensionSelected, setPensionSelected] = useState<boolean>(false);
-  const [giftSelected, setGiftSelected] = useState<boolean>(false);
+  const [giftSelected, setGiftSelected] = useState<boolean>(true);
+  const [isRegular, setIsRegular] = useState(true);
   return (
     <div>
       <Header content="플랜 직접 수정하기" />
-      <div className="grid gap-3">
+      <div className="grid w-92.25 gap-3">
         <h1 className="font-hana-light">
           원하는 대로 증여 계획을 조정해보세요.
         </h1>
@@ -62,7 +63,10 @@ export default function planEdit() {
                 preset={
                   giftSelected === true ? 'lightgreenshort' : 'lightgrayshort'
                 }
-                onClick={() => setGiftSelected(true)}
+                onClick={() => {
+                  setGiftSelected(true);
+                  setIsRegular(true);
+                }}
               >
                 신청
               </CustomButton>
@@ -82,39 +86,78 @@ export default function planEdit() {
             </h4>
           </div>
           <div className="pt-2">
-            <div className="flex justify-between">
+            {giftSelected === false ? (
               <div>
                 <div className="flex items-center gap-1 pb-2">
-                  <h2 className="font-hana-light text-xs">증여 기간</h2>
+                  <h2 className="font-hana-light text-xs">증여 방식 선택</h2>
                   <InfoIcon className="h-4 w-4 text-hana-gray-400" />
                 </div>
                 <div className="flex flex-row justify-between">
-                  <InputDay className="h-10.5 w-38.25 bg-hana-light-green" />
+                  <CustomButton
+                    preset={
+                      isRegular === true ? 'lightgreenshort' : 'lightgrayshort'
+                    }
+                    onClick={() => setIsRegular(true)}
+                  >
+                    정기 이체
+                  </CustomButton>
+                  <CustomButton
+                    preset={
+                      isRegular === false ? 'lightgreenshort' : 'lightgrayshort'
+                    }
+                    onClick={() => setIsRegular(false)}
+                  >
+                    자유 이체
+                  </CustomButton>
                 </div>
               </div>
-              <div>
-                <div className="flex items-center gap-1 pb-2">
-                  <h2 className="font-hana-light text-xs">월 증여액</h2>
-                  <InfoIcon className="h-4 w-4 text-hana-gray-400" />
+            ) : (
+              <div></div>
+            )}
+            {isRegular === false ? (
+              <div></div>
+            ) : (
+              <div className="pt-2">
+                <div className="flex justify-between">
+                  <div>
+                    <div className="flex items-center gap-1 pb-2">
+                      <h2 className="font-hana-light text-xs">증여 기간</h2>
+                      <InfoIcon className="h-4 w-4 text-hana-gray-400" />
+                    </div>
+                    <div className="flex flex-row justify-between">
+                      <InputDay className="h-10.5 w-38.25 bg-hana-light-green" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1 pb-2">
+                      <h2 className="font-hana-light text-xs">월 증여액</h2>
+                      <InfoIcon className="h-4 w-4 text-hana-gray-400" />
+                    </div>
+                    <div className="flex flex-row justify-between">
+                      <InputAmount
+                        showLabel={false}
+                        className="h-10.5 w-38.25"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-row justify-between">
-                  <InputAmount showLabel={false} className="h-10.5 w-38.25" />
+                <hr className="my-6 border-hana-gray-300" />
+                <div className="grid gap-2">
+                  <div className="flex gap-1">
+                    <h2 className="font-hana-light text-xs">총 증여액</h2>
+                    <InfoIcon className="h-4 w-4 text-hana-gray-400" />
+                  </div>
+                  <div className="grid justify-center rounded-xl bg-hana-light-green px-10 py-5">
+                    <h4 className="text-center text-hana-badge-green">
+                      5400만원
+                    </h4>
+                    <h4 className="text-hana-gray-500 text-xs">
+                      9년 × 12개월 × 50만원
+                    </h4>
+                  </div>
                 </div>
               </div>
-            </div>
-            <hr className="my-6 border-hana-gray-300" />
-            <div className="grid gap-2">
-              <div className="flex gap-1">
-                <h2 className="font-hana-light text-xs">총 증여액</h2>
-                <InfoIcon className="h-4 w-4 text-hana-gray-400" />
-              </div>
-              <div className="grid justify-center rounded-xl bg-hana-light-green px-10 py-5">
-                <h4 className="text-center text-hana-badge-green">5400만원</h4>
-                <h4 className="text-hana-gray-500 text-xs">
-                  9년 × 12개월 × 50만원
-                </h4>
-              </div>
-            </div>
+            )}
           </div>
         </div>
         <div className="grid justify-center gap-2 pt-4">
