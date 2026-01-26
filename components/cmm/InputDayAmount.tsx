@@ -91,9 +91,9 @@ export function InputDay({
         value={inputValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full bg-transparent text-center font-medium text-[24px] outline-none placeholder:text-hana-gray-400"
+        className="w-full bg-transparent text-center font-medium outline-none placeholder:text-hana-gray-400"
       />
-      <span className="ml-2 shrink-0 text-[16px] text-hana-gray-600">개월</span>
+      <span className="ml-2 shrink-0 text-hana-gray-600">개월</span>
     </label>
   );
 }
@@ -145,11 +145,9 @@ export function InputAmount({
           value={inputValue}
           onChange={handleChange}
           placeholder={placeholder}
-          className="w-full bg-transparent text-center font-medium text-[24px] outline-none placeholder:text-hana-gray-400"
+          className="w-full bg-transparent text-center font-medium outline-none placeholder:text-hana-gray-400"
         />
-        <span className="ml-2 shrink-0 text-[16px] text-hana-gray-600">
-          만원
-        </span>
+        <span className="ml-2 shrink-0 text-hana-gray-600">만원</span>
       </label>
     </div>
   );

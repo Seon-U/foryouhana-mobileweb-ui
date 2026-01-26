@@ -7,11 +7,17 @@ export default function GiftSection({
   onGiftPlanSelected,
   regular,
   onRegularSelected,
+  goalMoney,
+  monthlyMoney,
+  inMonth,
 }: {
   giftPlan: boolean;
   onGiftPlanSelected: (isSelected: boolean) => void;
   regular: boolean;
   onRegularSelected: (isSelected: boolean) => void;
+  goalMoney: number;
+  monthlyMoney: number;
+  inMonth: number;
 }) {
   return (
     <div className="pt-2">
@@ -58,7 +64,10 @@ export default function GiftSection({
                   <InfoIcon className="h-4 w-4 text-hana-gray-400" />
                 </div>
                 <div className="flex flex-row justify-between">
-                  <InputDay className="h-10.5 w-38.25 bg-hana-light-green" />
+                  <InputDay
+                    className="h-10.5 w-38.25 bg-hana-light-green"
+                    value={inMonth}
+                  />
                 </div>
               </div>
               <div>
