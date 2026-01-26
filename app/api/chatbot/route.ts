@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { prisma } from '@/lib/prisma'; // 로그 저장용
 
 // ✅ Enum 정의
-enum account_acc_type {
+enum AccountAccType {
   DEPOSIT = 'DEPOSIT', // 예금
   FUND = 'FUND', // 펀드
   PENSION = 'PENSION', // 연저펀
@@ -148,8 +148,8 @@ ${userInput}
     // 5. 데이터 가공
     const inMonth = data.periodYears * 12;
     const accType = data.usePensionFund
-      ? account_acc_type.PENSION
-      : account_acc_type.DEPOSIT;
+      ? AccountAccType.PENSION
+      : AccountAccType.DEPOSIT;
 
     // 🔥 정기/자유 적립 로직 (유기정기금이면 무조건 정기적립식이어야 함)
     // AI가 실수로 useYugi: true인데 isRegular: false를 줬을 경우를 대비한 방어 코드
