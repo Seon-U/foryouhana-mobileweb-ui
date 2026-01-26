@@ -61,8 +61,13 @@ export async function POST(req: NextRequest) {
 2. **유기정기금 평가 (3% 할인율)**
    - 정기적으로 일정 금액을 증여하기로 약정(계약)하고 신고하는 방식.
    - 미래의 돈을 현재가치(연 3% 할인)로 환산하므로 더 많은 금액 비과세 가능.
+   - **중요**: 유기정기금 신고를 추천한다면, 적립 방식은 반드시 **'정기적립식(Regular)'**이어야 합니다.
 
-3. **연금저축펀드 활용**
+3. **적립 방식 추천 (정기 vs 자유)**
+   - **정기적립식(Regular)**: 매월 고정된 날짜에 고정된 금액을 자동이체 (유기정기금 필수 조건).
+   - **자유적립식(Free)**: 여유 자금이 생길 때마다 자유롭게 입금 (수입이 불규칙하거나 보너스 활용 시 유리).
+
+4. **연금저축펀드 활용**
    - 증여 후 운용 수익 과세 이연, 연금 수령 시 저율 과세.
 
 # 🧠 추론 및 분석 가이드
@@ -76,6 +81,7 @@ export async function POST(req: NextRequest) {
   "monthlyGift": number,
   "totalGift": number,
   "useYugi": boolean,
+  "isRegular": boolean,   // true: 정기적립식, false: 자유적립식
   "usePensionFund": boolean,
   "explanation": string   // 상세 분석 및 제안 내용 (최대 500자)
 }
@@ -85,10 +91,11 @@ export async function POST(req: NextRequest) {
 - **줄바꿈(개행)을 적극적으로 사용하십시오.**
 - 한 문단은 2~3문장을 넘기지 말고, **핵심 내용마다 엔터(\n)를 두 번 입력**하여 단락을 나누십시오.
 - 중요한 키워드에는 적절한 이모티콘을 붙여주십시오.
+- 적립 방식(정기/자유)을 추천한 이유도 간단히 언급해주세요.
 - 예시:
   "승진 축하드려요! 🎉 월급이 오르셨다니 다행이네요.
   
-  하지만 어머님 수술비가 걱정되시겠어요. 😢 그래서 처음부터 무리하기보다는..."
+  유기정기금 신고를 통해 절세 효과를 극대화하기 위해 **정기적립식**을 추천드려요! 매월 꾸준히 모으는 게 중요하거든요. 😊"
 `;
 
     const userPrompt = `
@@ -144,6 +151,10 @@ ${userInput}
       ? account_acc_type.PENSION
       : account_acc_type.DEPOSIT;
 
+    // 🔥 정기/자유 적립 로직 (유기정기금이면 무조건 정기적립식이어야 함)
+    // AI가 실수로 useYugi: true인데 isRegular: false를 줬을 경우를 대비한 방어 코드
+    const inType = data.useYugi ? true : data.isRegular;
+
     // 🛡️ [안전장치 3] AI 답변 로그 저장 (실패 시 무시)
     try {
       await prisma.chatlog.create({
@@ -168,6 +179,7 @@ ${userInput}
         is_promise_fixed: data.useYugi,
         in_month: inMonth,
         acc_type: accType,
+        in_type: inType, // ✅ 추가된 필드 (true: 정기, false: 자유)
       },
     });
   } catch (e) {
