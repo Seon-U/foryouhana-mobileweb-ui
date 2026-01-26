@@ -32,6 +32,40 @@ async function main() {
     },
   });
 
+  // 펀드 추가 - 0125
+  const bondFund = await prisma.fund.create({
+    data: {
+      name: '우리아이 튼튼 채권 펀드',
+      danger: fund_danger.LOW,
+      type: fund_type.BOND,
+      company: '우리자산운용',
+      total_fee: 0.008, // 낮은 수수료
+      sell_fee: 0.001,
+      set_date: new Date('2023-05-20'),
+      image: 'https://placehold.co/400x400?text=BOND',
+      total_money: 500000000n,
+      plus_1: 3.2,
+      plus_5: 12.5,
+      plus_10: 28.0,
+    },
+  });
+
+  const globalStockFund = await prisma.fund.create({
+    data: {
+      name: '글로벌 혁신 기업 주식 펀드',
+      danger: fund_danger.HIGH,
+      type: fund_type.STOCK,
+      company: '우리자산운용',
+      total_fee: 0.025, // 높은 수익률만큼 높은 수수료
+      sell_fee: 0.01,
+      set_date: new Date('2024-02-15'),
+      image: 'https://placehold.co/400x400?text=STOCK',
+      total_money: 2000000000n,
+      plus_1: 15.8, // 변동성 큼
+      plus_5: 65.4,
+      plus_10: 120.0,
+    },
+  });
   // 3. 자녀 2명 생성 (제약 조건 준수)
   // 자녀 1: 유기정기금 YES (goal_money, monthly_money 필수)
   const child1 = await prisma.child.create({
@@ -71,7 +105,7 @@ async function main() {
     },
   });
 
-  // 자녀 1의 입출금 계좌
+  // 자녀 1의 입출금 계좌 != 연금저축펀드계좌
   const child1Deposit = await prisma.account.create({
     data: {
       child_id: child1.id,
@@ -83,7 +117,7 @@ async function main() {
     },
   });
 
-  // 자녀 2의 펀드 계좌 1: 정기적립식 (in_type: 0)
+  // 자녀 2의 펀드 계좌 1: 자유 (in_type: 0)
   const child2RegularFund = await prisma.account.create({
     data: {
       child_id: child2.id,
@@ -97,7 +131,7 @@ async function main() {
     },
   });
 
-  // 자녀 2의 펀드 계좌 2: 자유적립식 (in_type: 1 -> in_month 필수!)
+  // 자녀 2의 펀드 계좌 2: 정기적립식 (in_type: 1 -> in_month 필수!)
   const child2FreeFund = await prisma.account.create({
     data: {
       child_id: child2.id,
@@ -109,6 +143,34 @@ async function main() {
       in_type: true, // 1: 자유
       in_month: 12, // 제약 조건에 따라 필수 입력
       plus_rate: 4.5,
+    },
+  });
+
+  // 연저펀
+  const child1PensionPart1 = await prisma.account.create({
+    data: {
+      child_id: child1.id,
+      fund_id: bondFund.id, // 위에서 만든 채권형 펀드 ID
+      acc_num: '123-PENSION-001', // 계좌번호 동일
+      acc_type: account_acc_type.PENSION,
+      opened_at: new Date('2024-02-01'),
+      deposit: 400000n, // 채권 펀드에 들어있는 금액
+      plus_rate: 1.5,
+      in_type: false,
+    },
+  });
+
+  // 2. 연금저축펀드 - 주식형 상품 부분
+  const child1PensionPart2 = await prisma.account.create({
+    data: {
+      child_id: child1.id,
+      fund_id: globalStockFund.id, // 위에서 만든 주식형 펀드 ID
+      acc_num: '123-PENSION-001', // 계좌번호 동일!
+      acc_type: account_acc_type.PENSION,
+      opened_at: new Date('2024-02-01'),
+      deposit: 600000n, // 주식 펀드에 들어있는 금액
+      plus_rate: 8.4,
+      in_type: false,
     },
   });
 
@@ -125,6 +187,48 @@ async function main() {
       status: false,
     },
   });
+
+  await prisma.alert.create({
+    data: {
+      child_id: child1.id,
+      type: '2',
+      title: '증여세 한도에 거의 도달했어요!',
+      description:
+        '현재 누적 증여금이 비과세 구간 90%에 도달했어요. 100% 이후, 증여세가 발생해요. 미리 확인하고, 절세 방법을 준비해보세요.',
+      button_text: '확인',
+      priority: 7,
+      screen: 'home',
+      status: false,
+    },
+  });
+
+  await prisma.alert.create({
+    data: {
+      child_id: child1.id,
+      type: '3',
+      title: '펀드 만기에 도달했어요',
+      description: '축하합니다! 펀드 만기의 순간을 메모로 남겨요!',
+      button_text: '메모하기',
+      priority: 7,
+      screen: 'timeline', // 타임라인으로 이동해야함. 이름 수정
+      status: false,
+    },
+  });
+
+  await prisma.alert.create({
+    data: {
+      child_id: child1.id,
+      type: '4',
+      title: '증여세 신고 기간이에요',
+      description:
+        '이때까지의 증여에 대해서 증여 신고를 해봐요! 필요한 서류와 방법은 아이앞으로가 도와드려요!',
+      button_text: '확인',
+      priority: 7,
+      screen: 'home',
+      status: false,
+    },
+  });
+  // 추가 팝업도 만들 것!
 
   // 6. 송금 이력(History) 생성: 부모 계좌 -> 자녀 1 입출금 계좌
   await prisma.history.create({
