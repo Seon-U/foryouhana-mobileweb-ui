@@ -1,5 +1,6 @@
 import { InfoIcon } from 'lucide-react';
 import { InputAmount, InputDay } from '@/components/cmm/InputDayAmount';
+import { formatWon } from '@/lib/utils';
 import { BinaryToggle } from '../../../components/cmm/BinaryToggle';
 
 export default function GiftSection({
@@ -7,7 +8,6 @@ export default function GiftSection({
   onGiftPlanSelected,
   regular,
   onRegularSelected,
-  goalMoney,
   monthlyMoney,
   inMonth,
 }: {
@@ -15,7 +15,6 @@ export default function GiftSection({
   onGiftPlanSelected: (isSelected: boolean) => void;
   regular: boolean;
   onRegularSelected: (isSelected: boolean) => void;
-  goalMoney: number;
   monthlyMoney: number;
   inMonth: number;
 }) {
@@ -76,7 +75,11 @@ export default function GiftSection({
                   <InfoIcon className="h-4 w-4 text-hana-gray-400" />
                 </div>
                 <div className="flex flex-row justify-between">
-                  <InputAmount showLabel={false} className="h-10.5 w-38.25" />
+                  <InputAmount
+                    showLabel={false}
+                    className="h-10.5 w-38.25"
+                    value={monthlyMoney}
+                  />
                 </div>
               </div>
             </div>
@@ -87,9 +90,11 @@ export default function GiftSection({
                 <InfoIcon className="h-4 w-4 text-hana-gray-400" />
               </div>
               <div className="grid justify-center rounded-xl bg-hana-light-green px-10 py-5">
-                <h4 className="text-center text-hana-badge-green">5400만원</h4>
+                <h4 className="text-center text-hana-badge-green">
+                  {formatWon(monthlyMoney * inMonth)}만원
+                </h4>
                 <h4 className="text-hana-gray-500 text-xs">
-                  9년 × 12개월 × 50만원
+                  {formatWon(monthlyMoney)}만원 X {inMonth}개월
                 </h4>
               </div>
             </div>

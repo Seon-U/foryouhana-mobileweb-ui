@@ -80,9 +80,8 @@ export default function planEdit() {
             onRegularSelected={(isSelected) => {
               setIsRegular(isSelected);
             }}
-            goalMoney={draft?.plan.goal_money}
-            monthlyMoney={draft?.plan.monthly_money}
-            inMonth={draft?.plan.in_month}
+            monthlyMoney={Number(draft?.plan.monthly_money)}
+            inMonth={Number(draft?.plan.in_month)}
           />
         </div>
         <div className="grid justify-center gap-2 pt-4">
