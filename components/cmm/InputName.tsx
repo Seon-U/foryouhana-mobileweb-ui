@@ -47,20 +47,16 @@ export default function InputName({
   };
 
   return (
-    <div
-      className={cn('h-[138px] w-full bg-hana-gray-350 px-6 pt-6', className)}
-    >
+    <div className={cn('h-[138px] w-full bg-[#D9D9D9] px-6 pt-6', className)}>
       {label && (
-        <p className="mb-3 font-semibold text-[18px] text-hana-black">
-          {label}
-        </p>
+        <p className="mb-3 font-semibold text-[18px] text-black">{label}</p>
       )}
       <input
         type="text"
         value={inputValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full border-hana-black border-b bg-transparent pb-2 text-[16px] outline-none placeholder:text-hana-gray-400"
+        className="w-full border-black border-b bg-transparent pb-2 text-[16px] outline-none placeholder:text-hana-gray-400"
       />
     </div>
   );

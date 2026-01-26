@@ -52,7 +52,7 @@ export default function InputChat({
   return (
     <div
       className={cn(
-        'flex h-[58px] w-full items-center rounded-[10px] border border-hana-gray-400 bg-hana-input-bg px-4',
+        'flex h-[58px] w-full items-center rounded-[10px] border border-[#B5B5B5] bg-[#F5F6FA] px-4',
         className,
       )}
     >
@@ -62,7 +62,7 @@ export default function InputChat({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="flex-1 bg-transparent text-sm outline-none placeholder:text-hana-gray-400"
+        className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
       />
 
       <button
