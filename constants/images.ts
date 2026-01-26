@@ -22,4 +22,5 @@ export const IMAGES_PATH = {
   REGIST_PROTECT_ICON: '/register/icon/protect.svg',
   STARBOT: '/chatbot/icon/starbot.svg',
   PROGRESS_CHECK: '/ProgressBar/icon/StepSuccess.svg',
+  STARBOT3D: '/chatbot/icon/starbot3D.svg',
 } as const;
