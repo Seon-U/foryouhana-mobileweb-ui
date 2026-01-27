@@ -1,11 +1,10 @@
 import { InfoIcon } from 'lucide-react';
-import { InputAmount, InputDay } from '@/components/cmm/InputDayAmount';
+import { useState } from 'react';
+import { InputAmount, InputMonth } from '@/components/cmm/InputDayAmount';
 import {
   calculateGiftBenefit,
   formatWonDetail,
-  formatWonNumbers,
-  getMonthUnit,
-  getWonUnit,
+  formatWonNatural,
 } from '@/lib/utils';
 import { BinaryToggle } from '../../../components/cmm/BinaryToggle';
 
@@ -26,6 +25,8 @@ export default function GiftSection({
   onRegularSelected,
   monthlyMoney,
   inMonth,
+  onMonthlyMoneyChange,
+  onInMonthChange,
 }: {
   giftPlan: boolean;
   onGiftPlanSelected: (isSelected: boolean) => void;
@@ -33,7 +34,13 @@ export default function GiftSection({
   onRegularSelected: (isSelected: boolean) => void;
   monthlyMoney: number;
   inMonth: number;
+  onMonthlyMoneyChange: (money: number | undefined) => void;
+  onInMonthChange: (month: number | undefined) => void;
 }) {
+  const [inputMonth, setInputMonth] = useState<number | undefined>(inMonth);
+  const [inputMoney, setInputMoney] = useState<number | undefined>(
+    monthlyMoney,
+  );
   return (
     <div className="pt-2">
       <div className="flex items-center gap-1 pb-2">
@@ -89,10 +96,14 @@ export default function GiftSection({
                   <InfoIcon className="h-4 w-4 text-hana-gray-400" />
                 </div>
                 <div className="flex flex-row justify-between">
-                  <InputDay
+                  <InputMonth
                     className="h-10.5 w-38.25 bg-hana-light-green"
                     value={inMonth}
-                    unit={getMonthUnit(inMonth)}
+                    unit={'개월'}
+                    onChange={(value: number | undefined) => {
+                      setInputMonth(value);
+                      if (value) onInMonthChange(value);
+                    }}
                   />
                 </div>
               </div>
@@ -105,8 +116,12 @@ export default function GiftSection({
                   <InputAmount
                     showLabel={false}
                     className="h-10.5 w-38.25"
-                    value={formatWonNumbers(monthlyMoney)}
-                    unit={getWonUnit(monthlyMoney)}
+                    value={monthlyMoney}
+                    unit={'원'}
+                    onChange={(value: number | undefined) => {
+                      setInputMoney(value);
+                      if (value) onMonthlyMoneyChange(value);
+                    }}
                   />
                 </div>
               </div>
@@ -119,11 +134,14 @@ export default function GiftSection({
               </div>
               <div className="grid justify-center rounded-xl bg-hana-light-green px-10 py-5">
                 <h4 className="text-center text-hana-badge-green">
-                  {formatWonDetail(monthlyMoney * inMonth)}
+                  {formatWonNatural(
+                    (inputMonth ?? inMonth) * (inputMoney ?? monthlyMoney),
+                  )}
                 </h4>
                 <h4 className="text-hana-gray-500 text-xs">
-                  {formatWonDetail(monthlyMoney)} X {inMonth}
-                  {getMonthUnit(inMonth)}
+                  약 {formatWonNatural(inputMoney ?? monthlyMoney)} X{' '}
+                  {inputMonth ?? inMonth}
+                  개월
                 </h4>
               </div>
             </div>

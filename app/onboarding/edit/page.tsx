@@ -131,6 +131,12 @@ export default function PlanEdit() {
               }}
               monthlyMoney={form.monthlyMoney}
               inMonth={form.inMonth}
+              onInMonthChange={(value: number | undefined) => {
+                if (value) dispatch({ inMonth: value });
+              }}
+              onMonthlyMoneyChange={(value: number | undefined) => {
+                if (value) dispatch({ monthlyMoney: value });
+              }}
             />
           </div>
         </div>

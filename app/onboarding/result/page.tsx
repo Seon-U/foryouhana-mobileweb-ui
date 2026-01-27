@@ -7,7 +7,6 @@ import Header from '@/components/cmm/Header';
 import {
   formatMonthToYearMonth,
   formatWon,
-  formatWonKorean,
   formatWonNatural,
 } from '@/lib/utils';
 import type { BirthInput } from '../child-info/page';
@@ -136,7 +135,7 @@ export default function AnalysisResult() {
             </div>
             <div className="rounded-xl bg-hana-light-green p-4 text-center">
               <div className="font-bold text-[26px] text-hana-main">
-                {formatWon(data.plan.goal_money)}원
+                {formatWon(data.plan.in_month * data.plan.monthly_money)}원
               </div>
               <div className="text-[13px] text-gray-600">
                 {data.plan.in_month}개월 × {data.plan.monthly_money}원

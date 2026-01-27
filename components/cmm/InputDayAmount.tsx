@@ -101,6 +101,67 @@ export function InputDay({
   );
 }
 
+type InputMonthProps = {
+  value?: number;
+  unit?: string; // 기본: "개월"
+  onChange?: (value?: number) => void;
+  placeholder?: string;
+  className?: string;
+};
+
+export function InputMonth({
+  value,
+  unit = '개월',
+  onChange,
+  placeholder = '',
+  className,
+}: InputMonthProps) {
+  const [inputValue, setInputValue] = useState(value?.toString() ?? '');
+
+  useEffect(() => {
+    setInputValue(value?.toString() ?? '');
+  }, [value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/[^0-9]/g, '');
+
+    // 비었을 때
+    if (raw === '') {
+      setInputValue('');
+      onChange?.(undefined);
+      return;
+    }
+
+    // 앞자리 0 제거 (ex: 0012 → 12)
+    const normalized = raw.replace(/^0+(?=\d)/, '');
+    const num = Number.parseInt(normalized, 10);
+
+    if (Number.isNaN(num)) return;
+
+    setInputValue(normalized);
+    onChange?.(num);
+  };
+
+  return (
+    <label
+      className={cn(
+        'flex h-[42px] w-[334px] cursor-text items-center justify-center rounded-[10px] bg-hana-gray-200 px-4',
+        className,
+      )}
+    >
+      <input
+        type="text"
+        inputMode="numeric"
+        value={inputValue}
+        onChange={handleChange}
+        placeholder={placeholder}
+        className="w-full bg-transparent text-center font-medium outline-none placeholder:text-hana-gray-400"
+      />
+      <span className="ml-2 shrink-0 text-hana-gray-600">{unit}</span>
+    </label>
+  );
+}
+
 export function InputAmount({
   value,
   onChange,
