@@ -2,24 +2,34 @@
 
 import { ChevronRight } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BottomNavBar } from '@/components/cmm/NavBar';
 import ToggleChildProfile from '@/components/home/ToggleChildProfile';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 
-export default function menu() {
-  // 로컬 테스트용
+export default function Menu() {
+  // 컴포넌트 이름은 대문자로 시작하는 게 관례예요!
+  const route = useRouter();
+  const params = useParams();
+  const childId = Number(params.childId); // URL에서 현재 자녀 ID 가져오기
   const kidsProfile = [
     { id: 1, avatarUrl: '/file/자녀1.jpg' },
     { id: 2, avatarUrl: '/file/자녀2.jpg' },
     { id: 3, avatarUrl: '/file/자녀3.jpg' },
   ];
-  const [selectedKidId, setSelectedKidId] = useState<number>(kidsProfile[0].id);
 
-  const route = useRouter();
-  const params = useParams();
-  const childId = params.childId as string;
+  // ✅ 해결 포인트: useState 초기값에 URL의 childId를 넣어줍니다.
+  const [selectedKidId, setSelectedKidId] = useState<number>(() => {
+    return childId || kidsProfile[0].id;
+  });
+
+  useEffect(() => {
+    if (childId) {
+      // setter 함수 내부에서 이전 값(prev)과 비교하면 의존성 배열에서 제거 가능합니다.
+      setSelectedKidId((prev) => (prev !== childId ? childId : prev));
+    }
+  }, [childId]); // 이제 selectedKidId를 배열에 넣지 않아도 됨!
   return (
     <div className="relative min-h-full">
       <div id="menuHeader" className="mb-25 flex h-12.5 justify-between">
@@ -29,9 +39,10 @@ export default function menu() {
           selectedKidId={selectedKidId}
           onSelect={(kidId) => {
             setSelectedKidId(kidId);
+            route.push(`/main/${kidId}/menu`);
           }}
           onAddKid={() => {
-            throw new Error('Function not implemented.');
+            alert('자녀 추가 기능 준비 중!');
           }}
         />
       </div>
@@ -73,7 +84,7 @@ export default function menu() {
 
                 <button
                   type="button"
-                  onClick={() => route.push(`/main/${childId}/profileEdit`)}
+                  onClick={() => route.push(`/onboarding/intro`)}
                   className="hover:cursor-pointer"
                 >
                   <ChevronRight />
