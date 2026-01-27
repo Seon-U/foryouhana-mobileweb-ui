@@ -31,4 +31,8 @@ export const IMAGES_PATH = {
   LOADING_HANABOT_IMG: '/ai/hanabot.svg',
   FAMILYCHECK_SCOURT_ICON: '/register/icon/verification_family.svg',
   FAMILYCHECK_HANA_ICON: '/register/icon/hana_verify.svg',
+  RUN: '/home/icon/run.png',
+  CUTE: '/home/icon/cute.png',
+  LADDER_CUTE: '/register/icon/ladder-cute.svg',
+  REGISTER_STAR: '/register/icon/register-star.svg',
 } as const;

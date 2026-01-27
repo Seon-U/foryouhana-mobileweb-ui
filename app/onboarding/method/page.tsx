@@ -27,7 +27,6 @@ export default function analysisMethodPage() {
         };
 
     const sessionData = {
-      ...prevData.plan,
       child_id: null,
       isSigned: false, // ✅ 요청하신 대로 false 설정
       updated_at: new Date().toISOString(),
