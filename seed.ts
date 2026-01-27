@@ -141,6 +141,4 @@ main()
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());
-    process.exit(1);
-  })
-  .finally(() => prisma.$disconnect());
+process.exit(1);
