@@ -74,7 +74,7 @@ model account {
   in_type                                    Boolean           @default(false) // 0=정기(false), 1=자유(true)
   plus_rate                                  Decimal           @default(0.00) @db.Decimal(5, 2)
   plus_money                                 BigInt            @default(0) @db.UnsignedBigInt
-  in_month                                   Int?              @db.TinyInt
+  in_month                                   Int?              @db.TinyInt // 납입하기로 한 개월수
   child                                      child             @relation(fields: [child_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_child")
   fund                                       fund?             @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_fund")
   history_history_source_account_idToaccount history[]         @relation("history_source_account_idToaccount")
