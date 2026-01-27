@@ -74,6 +74,7 @@ export default function chatbotSignProcess() {
       });
 
       const data = await res.json();
+      console.log(data);
 
       // 3. AI 응답 처리
       if (data.error) {

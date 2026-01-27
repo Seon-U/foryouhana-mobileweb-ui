@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { z } from 'zod';
 import { prisma } from '@/lib/prisma'; // 로그 저장용
 
 // ✅ Enum 정의
@@ -10,14 +9,6 @@ enum AccountAccType {
   PENSION = 'PENSION', // 연저펀
 }
 
-const chatbotRequestSchema = z.object({
-  childId: z.number(),
-  userInput: z.string(),
-  parentIncome: z.number(),
-  parentAssets: z.number(),
-  childAge: z.number(),
-});
-
 export async function POST(req: NextRequest) {
   const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -25,28 +16,21 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const parsedBody = chatbotRequestSchema.safeParse(body);
-    if (!parsedBody.success) {
-      return NextResponse.json(
-        { error: 'Invalid request body' },
-        { status: 400 },
-      );
-    }
-
-    const { childId, userInput, parentIncome, parentAssets, childAge } =
-      parsedBody.data;
+    const { childId, userInput, parentIncome, parentAssets, childAge } = body;
 
     // 🛡️ [안전장치 1] 사용자 질문 로그 저장 (실패 시 무시)
-    try {
-      await prisma.chatlog.create({
-        data: {
-          child_id: childId,
-          log: userInput.slice(0, 500),
-          is_sent: false,
-        },
-      });
-    } catch (logError) {
-      console.warn('⚠️ 채팅 로그 저장 실패 (무시):', logError);
+    if (childId) {
+      try {
+        await prisma.chatlog.create({
+          data: {
+            child_id: childId,
+            log: userInput.slice(0, 500),
+            is_sent: false,
+          },
+        });
+      } catch (logError) {
+        console.warn('⚠️ 채팅 로그 저장 실패 (무시):', logError);
+      }
     }
 
     const isAdult = childAge >= 19;
@@ -138,17 +122,19 @@ ${userInput}
     if (data.error) {
       const errorMsg = data.error.slice(0, 500);
 
-      // 🛡️ [안전장치 2] 에러 로그 저장 (실패 시 무시)
-      try {
-        await prisma.chatlog.create({
-          data: {
-            child_id: childId,
-            log: errorMsg,
-            is_sent: true,
-          },
-        });
-      } catch (logError) {
-        console.warn('⚠️ 에러 로그 저장 실패 (무시):', logError);
+      // 🛡️ [안전장치 2] 에러 로그 저장 (실패 시 무시)s
+      if (childId) {
+        try {
+          await prisma.chatlog.create({
+            data: {
+              child_id: childId,
+              log: errorMsg,
+              is_sent: true,
+            },
+          });
+        } catch (logError) {
+          console.warn('⚠️ 에러 로그 저장 실패 (무시):', logError);
+        }
       }
 
       return NextResponse.json({ error: errorMsg }, { status: 400 });
@@ -168,13 +154,15 @@ ${userInput}
 
     // 🛡️ [안전장치 3] AI 답변 로그 저장 (실패 시 무시)
     try {
-      await prisma.chatlog.create({
-        data: {
-          child_id: childId,
-          log: explanation,
-          is_sent: true,
-        },
-      });
+      if (childId) {
+        await prisma.chatlog.create({
+          data: {
+            child_id: childId,
+            log: explanation,
+            is_sent: true,
+          },
+        });
+      }
     } catch (logError) {
       console.warn('⚠️ 답변 로그 저장 실패 (무시):', logError);
     }
