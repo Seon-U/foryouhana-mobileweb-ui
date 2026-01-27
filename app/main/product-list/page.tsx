@@ -4,6 +4,13 @@ import type { fund_danger, fund_type } from '@/lib/generated/prisma/enums';
 import { prisma } from '@/lib/prisma';
 import { ProductListClient } from './ProductListClient';
 
+/**
+ * @page: 상품 리스트 페이지
+ * @description: 일반펀드 / 연금저축펀드 구분
+ * @author: typeYu
+ * @date: 2026-01-27
+ */
+
 type Props = {
   searchParams?: Promise<{ type?: string }>;
 };
@@ -16,7 +23,6 @@ function dangerToRisk(d: fund_danger) {
 
 function formatPct(v: unknown) {
   if (v == null) return '0.0';
-  // Prisma Decimal은 보통 toString 가능
   return String(v);
 }
 
@@ -29,7 +35,7 @@ function formatPerformance(f: {
 }
 
 function pickIcon(isPension: boolean, t: fund_type) {
-  if (!isPension) return 'hana' as const;
+  if (isPension) return 'hana' as const;
   return t === 'ETF' ? ('sp' as const) : ('king' as const);
 }
 
@@ -68,7 +74,6 @@ export default async function ProductListPage({ searchParams }: Props) {
     <div>
       <Header content="상품 리스트" />
 
-      {/* 탭 + 리스트는 client에서 router.push로 type 변경 */}
       <ProductListClient type={type} items={items} />
 
       <div className="pb-24" />
