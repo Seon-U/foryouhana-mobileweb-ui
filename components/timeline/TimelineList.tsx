@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { saveTimelineMessage } from '@/app/actions/timeline';
+import { saveTimelineMessage } from '@/actions/timeline';
 import { FinancialHistoryGiftModal } from './FinancialHistoryGiftModal';
 import TimelineMsg from './TimelineMsg';
 import TimelineRow from './TimelineRow';
