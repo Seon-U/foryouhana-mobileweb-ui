@@ -12,7 +12,7 @@ import { PriceTrendSection } from './price-trend-section.client';
 
 /**
  * @page: 펀드 상품 리스트 화면_가입설명(서버 컴포넌트)
- * @description: 펀드 카드를 누르면 나오는 각 펀드의 디테일한 설명 페이지(길어서 컴포넌트로 많이 뺌) 
+ * @description: 펀드 카드를 누르면 나오는 각 펀드의 디테일한 설명 페이지(길어서 컴포넌트로 많이 뺌)
  * @author: typeYu
  * @date: 2026-01-27
  */
