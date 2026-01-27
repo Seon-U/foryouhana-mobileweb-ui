@@ -30,10 +30,6 @@ export function GiftCompleteModal({
   onAction,
   amount,
 }: GiftCompleteModalProps) {
-  const handleAction = () => {
-    onAction();
-  };
-
   return (
     <CardModal isOpen={isOpen} onClose={onClose}>
       <div className="w-[340px] rounded-[30px] bg-white px-6 py-8">
@@ -68,7 +64,7 @@ export function GiftCompleteModal({
         {/* Action Button */}
         <button
           type="button"
-          onClick={handleAction}
+          onClick={onAction}
           className="w-full rounded-full bg-hana-main py-4 font-hana-medium text-lg text-white"
         >
           메모하기
