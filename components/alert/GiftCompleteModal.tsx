@@ -9,19 +9,13 @@
 
 import { X } from 'lucide-react';
 import { CardModal } from '@/components/ui/CardModal';
+import { formatAmount } from '@/lib/utils/format';
 
 interface GiftCompleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAction: () => void;
   amount: number;
-}
-
-/**
- * 숫자를 천 단위 콤마 포맷으로 변환
- */
-function formatAmount(amount: number): string {
-  return amount.toLocaleString('ko-KR');
 }
 
 export function GiftCompleteModal({

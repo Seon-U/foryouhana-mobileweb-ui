@@ -8,18 +8,12 @@
  */
 
 import { CardModal } from '@/components/ui/CardModal';
+import { formatAmount } from '@/lib/utils/format';
 
 interface TaxSavingModalProps {
   isOpen: boolean;
   onClose: () => void;
   savedAmount?: number;
-}
-
-/**
- * 숫자를 천 단위 콤마 포맷으로 변환
- */
-function formatAmount(amount: number): string {
-  return amount.toLocaleString('ko-KR');
 }
 
 export function TaxSavingModal({
