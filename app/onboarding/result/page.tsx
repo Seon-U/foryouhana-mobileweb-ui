@@ -4,7 +4,12 @@ import { Check, Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CustomButton } from '@/components/cmm/CustomButton';
 import Header from '@/components/cmm/Header';
-import { formatWon } from '@/lib/utils';
+import {
+  formatMonthToYearMonth,
+  formatWon,
+  formatWonKorean,
+  formatWonNatural,
+} from '@/lib/utils';
 import type { BirthInput } from '../child-info/page';
 
 /**
@@ -97,20 +102,27 @@ export default function AnalysisResult() {
               {/* 증여 기간 */}
               <div className="flex-1">
                 <p className="mb-1 text-[13px] text-gray-600">증여 기간</p>
-                <div className="flex h-[70px] items-center justify-center rounded-xl bg-gray-100">
-                  <span className="font-bold text-[22px]">
+                <div className="flex h-[70px] flex-col items-center justify-center rounded-xl bg-gray-100">
+                  <div className="font-hana-regular text-[18px] leading-tight">
                     {data.plan.in_month}개월
-                  </span>
+                  </div>
+                  <div className="font-hana-light text-[12px] text-gray-600">
+                    약 {formatMonthToYearMonth(data.plan.in_month)}
+                  </div>
                 </div>
               </div>
 
               {/* 월 증여액 */}
               <div className="flex-1">
                 <p className="mb-1 text-[13px] text-gray-600">월 증여액</p>
-                <div className="flex h-[70px] items-center justify-center rounded-xl bg-gray-100">
-                  <span className="font-bold text-[22px]">
-                    {formatWon(data.plan.monthly_money)}만원
-                  </span>
+
+                <div className="flex h-[70px] flex-col items-center justify-center rounded-xl bg-gray-100">
+                  <div className="font-hana-regular text-[18px] leading-tight">
+                    {formatWon(data.plan.monthly_money)}원
+                  </div>
+                  <div className="font-hana-light text-[12px] text-gray-600">
+                    약 {formatWonNatural(data.plan.monthly_money)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -124,11 +136,10 @@ export default function AnalysisResult() {
             </div>
             <div className="rounded-xl bg-hana-light-green p-4 text-center">
               <div className="font-bold text-[26px] text-hana-main">
-                {formatWon(data.plan.goal_money)}만원
+                {formatWon(data.plan.goal_money)}원
               </div>
               <div className="text-[13px] text-gray-600">
-                {data.plan.in_month}개월 × {data.plan.monthly_money}
-                만원
+                {data.plan.in_month}개월 × {data.plan.monthly_money}원
               </div>
             </div>
           </div>
