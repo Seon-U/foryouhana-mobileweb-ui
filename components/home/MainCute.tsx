@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'; // useRef 추가
 import { IMAGES_PATH } from '@/constants/images';
 
 // 💬 메시지 데이터는 기존 그대로 유지
@@ -71,7 +71,7 @@ const NORMAL_MESSAGES = [
   '당신은 소중해요 💖💎',
   '통장 잔고 두둑히 💳💰',
   '절세 요정 별벗 🧚‍♂️✨',
-  '황금알 낳는 거위 🦢🥚',
+  '황금알 낳는 거위  Swan🥚',
   '노후 준비 완벽 👵👴',
   '내 집 마련 꿈 🏡🔑',
   '비타민 충전 완료! 🍋⚡',
@@ -85,7 +85,6 @@ const NORMAL_MESSAGES = [
   '언제나 응원해 📣🚩',
 ];
 
-// 🔥 캐릭터 타입에 'run' 추가
 type CharacterType = 'cute' | 'normal' | 'run';
 
 export default function MainCute() {
@@ -93,64 +92,71 @@ export default function MainCute() {
   const [isBouncing, setIsBouncing] = useState(false);
   const [message, setMessage] = useState('엄마 사랑해! ❤️🧡💛');
   const [charType, setCharType] = useState<CharacterType>('cute');
-
-  // X 좌표 상태 (초기값: 10%)
   const [positionX, setPositionX] = useState(10);
 
-  // 클라이언트 마운트 시 랜덤 위치 초기화
+  // 🛠️ 타이머 관리를 위한 Ref 추가
+  const bounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const bubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     setPositionX(Math.random() * 70);
+
+    // 🛠️ 언마운트 시 타이머 정리 (클린업)
+    return () => {
+      if (bounceTimerRef.current) clearTimeout(bounceTimerRef.current);
+      if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
+    };
   }, []);
 
   const handleCharacterClick = () => {
     if (showBubble) return;
 
-    // 1. 캐릭터 타입 랜덤 결정 (cute / normal / run 중 하나)
     const types: CharacterType[] = ['cute', 'normal', 'run'];
     const nextType = types[Math.floor(Math.random() * types.length)];
     setCharType(nextType);
 
-    // 2. 메시지 랜덤 선택 (run일 때도 NORMAL 메시지 사용 - 원하시면 변경 가능)
     const targetList = nextType === 'cute' ? CUTE_MESSAGES : NORMAL_MESSAGES;
     const randomIndex = Math.floor(Math.random() * targetList.length);
     setMessage(targetList[randomIndex]);
 
-    // 3. 위치 랜덤 변경 (0% ~ 70%)
     const newX = Math.random() * 70;
     setPositionX(newX);
 
-    // 4. 애니메이션 실행
     setIsBouncing(true);
     setShowBubble(true);
 
-    setTimeout(() => {
+    // 🛠️ 기존 타이머가 작동 중이면 먼저 해제
+    if (bounceTimerRef.current) clearTimeout(bounceTimerRef.current);
+    if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
+
+    // 🛠️ 타이머 ID 저장
+    bounceTimerRef.current = setTimeout(() => {
       setIsBouncing(false);
     }, 300);
 
-    setTimeout(() => {
+    bubbleTimerRef.current = setTimeout(() => {
       setShowBubble(false);
     }, 2000);
   };
 
-  // 🔥 현재 상태에 맞는 이미지 경로 반환 헬퍼 함수
   const getCharacterImage = () => {
     switch (charType) {
       case 'cute':
         return IMAGES_PATH.CUTE;
       default:
-        return IMAGES_PATH.RUN; // 상수에 RUN 추가되어 있어야 함
+        // 원래 코드 흐름 유지 (IMAGES_PATH.RUN이 정의되어 있어야 함)
+        return IMAGES_PATH.RUN;
     }
   };
 
   return (
     <div className="relative h-[161px] w-full overflow-hidden rounded-t-4xl border-3 border-hana-pastel-mint shadow-md">
-      {/* 배경 */}
       <div className="absolute inset-0 z-0"></div>
 
       <button
         type="button"
         className="absolute bottom-[10px] z-10 flex flex-col items-center outline-none transition-all duration-500 ease-in-out active:scale-95"
-        style={{ left: `${positionX}%` }} // 부드러운 이동
+        style={{ left: `${positionX}%` }}
         onClick={handleCharacterClick}
       >
         {/* 말풍선 */}
@@ -161,7 +167,6 @@ export default function MainCute() {
           <span className="whitespace-nowrap font-bold text-hana-main text-xs">
             {message}
           </span>
-          {/* 말풍선 꼬리 */}
           <div className="-bottom-1.5 -translate-x-1/2 absolute left-1/2 h-3 w-3 rotate-45 bg-white"></div>
         </div>
 
@@ -171,7 +176,7 @@ export default function MainCute() {
           `}
         >
           <Image
-            src={getCharacterImage()} // 🔥 헬퍼 함수로 깔끔하게 처리
+            src={getCharacterImage()}
             alt="character"
             fill
             className="object-contain drop-shadow-md"
