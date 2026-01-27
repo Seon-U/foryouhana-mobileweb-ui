@@ -1,20 +1,15 @@
 import type { Route } from 'next';
 import { redirect } from 'next/navigation';
 import Header from '@/components/cmm/Header';
-// 2. 공통 컴포넌트 (cmm)
 import { BottomNavBar } from '@/components/cmm/NavBar';
 
-// 3. 도메인 컴포넌트 (home, timeline)
-import ToggleChildProfile, {
-  type KidProfile,
-} from '@/components/home/ToggleChildProfile';
+import type { KidProfile } from '@/components/home/ToggleChildProfile';
+import TimelineChildToggle from '@/components/timeline/TimelineChildToggle';
 import TimelineFooter from '@/components/timeline/TimelineFooter';
 import TimelineList from '@/components/timeline/TimelineList';
 import TimelineSummary from '@/components/timeline/TimelineSummary';
 
-// 4. 라이브러리 및 설정
 import { prisma } from '@/lib/prisma';
-import TimelineChildToggle from '@/components/timeline/TimelineChildToggle';
 
 export const dynamic = 'force-dynamic';
 
