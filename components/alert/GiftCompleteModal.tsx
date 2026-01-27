@@ -47,13 +47,13 @@ export function GiftCompleteModal({
           >
             <X className="h-6 w-6 text-hana-gray-500" />
           </button>
-          <h2 className="px-8 font-hana-bold text-lg text-black">
+          <h2 className="px-8 font-hana-bold text-black text-lg">
             이번 달 증여가 완료됐어요 🎁
           </h2>
         </div>
 
         {/* Description */}
-        <p className="mb-8 text-center font-hana-regular text-base leading-relaxed text-hana-gray-600">
+        <p className="mb-8 text-center font-hana-regular text-base text-hana-gray-600 leading-relaxed">
           아이 계좌로{' '}
           <span className="font-hana-bold text-black">
             {formatAmount(amount)}
