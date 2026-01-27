@@ -137,5 +137,5 @@ export function formatWonNatural(amount: number): string {
     return `${amount.toLocaleString()}원`;
   }
 
-  return parts.join(' ') + ' 원';
+  return `${parts.join(' ')}원`;
 }
