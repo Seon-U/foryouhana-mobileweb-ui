@@ -2623,13 +2623,8 @@ snapshots:
 
   ohash@2.0.11: {}
 
-<<<<<<< HEAD
   openai@6.16.0: {}
-=======
-  openai@6.16.0(zod@4.3.6):
-    optionalDependencies:
-      zod: 4.3.6
->>>>>>> origin/dev
+
 
   path-key@3.1.1: {}
 
