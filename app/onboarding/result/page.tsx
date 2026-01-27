@@ -46,20 +46,22 @@ export const EMPTY_DRAFT_PLAN: DraftPlanPayload = {
 };
 export default function AnalysisResult() {
   const router = useRouter();
-  const emptyDraft: DraftPlanPayload = EMPTY_DRAFT_PLAN;
-  let data: DraftPlanPayload = emptyDraft;
+  let data: DraftPlanPayload;
   try {
     const raw = sessionStorage.getItem('giftPlan');
-    const planData: DraftPlanPayload = raw
-      ? JSON.parse(raw)
-      : {
-          updated_at: new Date().toISOString(),
-          plan: {},
-        };
-    data = planData;
+    if (raw) {
+      const parsedData = JSON.parse(raw);
+      if (parsedData.plan?.child_birth) {
+        data = parsedData;
+      } else {
+        throw new Error('Invalid plan data in sessionStorage');
+      }
+    } else {
+      data = EMPTY_DRAFT_PLAN;
+    }
   } catch {
-    // 깨진 데이터면 폐기
     sessionStorage.removeItem('giftPlan');
+    data = EMPTY_DRAFT_PLAN;
   }
 
   return (
