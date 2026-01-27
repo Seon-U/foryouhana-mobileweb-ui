@@ -70,7 +70,6 @@ export default function menu() {
 
                 <button
                   type="button"
-                  // 잠시 대기.. 페이지가 없음@@
                   onClick={() => route.push(`/main/${childId}/profileEdit`)}
                   className="hover:cursor-pointer"
                 >
@@ -95,7 +94,7 @@ export default function menu() {
           </Button>
           <Button
             className="flex h-[60px] w-full cursor-pointer justify-between rounded-[15px] bg-hana-pastel-mint p-2 text-[18px] hover:bg-hana-pastel-mint/60"
-            onClick={() => route.push(`/onboarding/intro`)}
+            onClick={() => route.push(`/main/${childId}/my-product`)}
           >
             <p>현재 가입 상품 보기</p> <ChevronRight />
           </Button>
