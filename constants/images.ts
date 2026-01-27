@@ -28,4 +28,5 @@ export const IMAGES_PATH = {
   REGIST_FUNDACCOUNT_ICON: '/register/icon/fundAccount.svg',
   REGIST_FUNDPRODUCT_ICON: '/register/icon/fundProduct.svg',
   REGIST_STARSPRING_IMG: '/register/img/starSpring.svg',
+  LOADING_HANABOT_IMG: '/ai/hanabot.svg',
 } as const;
