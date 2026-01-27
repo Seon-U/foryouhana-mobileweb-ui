@@ -117,9 +117,9 @@ async function main() {
       set_date: new Date('2020-01-15'),
       image: 'https://placehold.co/400x400?text=BOND',
       total_money: 8000000000n,
-      plus_1: '3.5',
-      plus_5: '15.2',
-      plus_10: '32.1',
+      plus_1: 3.5,
+      plus_5: 15.2,
+      plus_10: 32.1,
     },
   });
 
@@ -141,9 +141,9 @@ async function main() {
       set_date: new Date('2021-04-09'),
       image: 'https://placehold.co/400x400?text=TIGER',
       total_money: 50000000000n, // 규모 큼
-      plus_1: '38.2',
-      plus_5: '120.5',
-      plus_10: '0.0',
+      plus_1: 38.2,
+      plus_5: 120.5,
+      plus_10: 0.0,
     },
   });
 
@@ -161,9 +161,9 @@ async function main() {
       set_date: new Date('2002-10-14'),
       image: 'https://placehold.co/400x400?text=KODEX',
       total_money: 60000000000n,
-      plus_1: '8.4',
-      plus_5: '25.6',
-      plus_10: '55.3',
+      plus_1: 8.4,
+      plus_5: 25.6,
+      plus_10: 55.3,
     },
   });
 
@@ -181,9 +181,9 @@ async function main() {
       set_date: new Date('2022-11-15'),
       image: 'https://placehold.co/400x400?text=ACE',
       total_money: 1500000000n,
-      plus_1: '12.1',
-      plus_5: '0.0',
-      plus_10: '0.0',
+      plus_1: 12.1,
+      plus_5: 0.0,
+      plus_10: 0.0,
     },
   });
 
@@ -201,9 +201,9 @@ async function main() {
       set_date: new Date('2018-02-05'),
       image: 'https://placehold.co/400x400?text=KBSTAR',
       total_money: 2500000000n,
-      plus_1: '3.8',
-      plus_5: '14.2',
-      plus_10: '25.4',
+      plus_1: 3.8,
+      plus_5: 14.2,
+      plus_10: 25.4,
     },
   });
 
@@ -221,9 +221,9 @@ async function main() {
       set_date: new Date('2023-05-25'),
       image: 'https://placehold.co/400x400?text=ARIRANG',
       total_money: 1200000000n,
-      plus_1: '-2.5', // 금리 영향으로 마이너스 가능성 반영
-      plus_5: '0.0',
-      plus_10: '0.0',
+      plus_1: -2.5, // 금리 영향으로 마이너스 가능성 반영
+      plus_5: 0.0,
+      plus_10: 0.0,
     },
   });
 
