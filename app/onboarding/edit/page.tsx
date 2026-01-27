@@ -67,21 +67,22 @@ export default function PlanEdit() {
       ...state,
       ...action,
     }),
-    null,
-    () => {
-      try {
-        const raw = sessionStorage.getItem('giftPlan');
-        if (!raw) return buildFormFromDraft(null);
-
-        const parsed = JSON.parse(raw) as DraftPlanPayload;
-        setDraft(parsed);
-        return buildFormFromDraft(parsed);
-      } catch {
-        sessionStorage.removeItem('giftPlan');
-        return buildFormFromDraft(null);
-      }
-    },
+    buildFormFromDraft(null),
   );
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem('giftPlan');
+      if (!raw) return;
+
+      const parsed = JSON.parse(raw) as DraftPlanPayload;
+
+      setDraft(parsed); // ✅ 안전
+      dispatch(buildFormFromDraft(parsed)); // 또는 dispatch({ ... })
+    } catch {
+      sessionStorage.removeItem('giftPlan');
+    }
+  }, []);
 
   useEffect(() => {
     setIsReady(true);
