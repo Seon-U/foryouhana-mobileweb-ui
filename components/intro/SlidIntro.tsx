@@ -22,7 +22,7 @@ export default function SlideIntro() {
       </Card>
       <div className="pt-4.25 font-hana-medium">
         <h2 className="text-[15px]">
-          자녀에게
+          자녀에게{' '}
           <span className="font-hana-bold text-hana-main">꾸준히 증여</span>
           하며 재테크 해봐요.
         </h2>
@@ -51,6 +51,11 @@ export default function SlideIntro() {
         <div className="pt-8">
           <InvestChartCard />
         </div>
+      </div>
+      <div className="relative mt-5 w-full">
+        <h1 className="absolute right-0 bottom-0 text-[12px] text-hana-gray-400">
+          1/3
+        </h1>
       </div>
     </div>
   );

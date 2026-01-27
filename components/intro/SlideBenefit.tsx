@@ -2,9 +2,9 @@ import Image from 'next/image';
 import { InfoCard } from './InfoCard';
 import { IntroStatCard } from './IntroStatCard';
 
-export default function GiftInfoSection() {
+export default function SlideBenefit() {
   return (
-    <div className="flex w-full flex-col gap-3 font-hana-cm">
+    <div className="flex w-full flex-col gap-2 font-hana-cm">
       <div className="relative">
         <InfoCard badge="아시나요?">
           <span className="text-hana-light-mint">미리 증여세를 신고</span>
@@ -53,6 +53,11 @@ export default function GiftInfoSection() {
         <IntroStatCard badge="✨ 최저 가입한도" title="10,000원" />
         <IntroStatCard badge="📝 증여 신고" title="필수 첨부자료 제공" />
         <IntroStatCard badge="📈 장기 투자" title="복리 마법" />
+      </div>
+      <div className="relative w-full">
+        <h1 className="absolute right-0 bottom-0.5 font-hana-light text-[12px] text-hana-gray-400">
+          2/3
+        </h1>
       </div>
     </div>
   );

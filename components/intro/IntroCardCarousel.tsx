@@ -1,3 +1,7 @@
+'use client';
+
+import Autoplay from 'embla-carousel-autoplay';
+import { useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
@@ -15,8 +19,13 @@ type Props = {
 };
 
 export default function IntroCardCarousel({ cardlist }: Props) {
+  const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
   return (
-    <Carousel className="mt-0 flex flex-col items-center justify-start pt-1">
+    <Carousel
+      opts={{ loop: true }}
+      plugins={[autoplay.current]}
+      className="mt-0 flex flex-col items-center justify-start pt-1"
+    >
       <CarouselContent className="h-165 w-92.5">
         {cardlist.map((card) => (
           <CarouselItem key={card.id} className="h-full w-full">

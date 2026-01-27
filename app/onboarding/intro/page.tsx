@@ -1,9 +1,10 @@
+import Link from 'next/link';
 import { CustomButton } from '@/components/cmm/CustomButton';
 import Header from '@/components/cmm/Header';
+import IntroCardCarousel from '../../../components/intro/IntroCardCarousel';
+import SlideAi from '../../../components/intro/SlideAi';
 import SlideBenefit from '../../../components/intro/SlideBenefit';
 import SlideIntro from '../../../components/intro/SlidIntro';
-import IntroCardCarousel from './IntroCardCarousel';
-import SlideAi from './SlideAi';
 
 export default function ServiceInfo() {
   const cardlist = [
@@ -16,9 +17,11 @@ export default function ServiceInfo() {
       <Header content="아이앞으로" />
       <IntroCardCarousel cardlist={cardlist} />
       <div className="pt-3.25 pb-9">
-        <CustomButton preset="greenlong" className="font-hana-cm">
-          내 증여 가능 금액 찾아보기
-        </CustomButton>
+        <Link href={'/onboarding/child-info'}>
+          <CustomButton preset="greenlong" className="font-hana-cm">
+            내 증여 가능 금액 찾아보기
+          </CustomButton>
+        </Link>
       </div>
     </div>
   );
