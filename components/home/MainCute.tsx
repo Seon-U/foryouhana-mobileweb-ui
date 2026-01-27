@@ -137,10 +137,8 @@ export default function MainCute() {
     switch (charType) {
       case 'cute':
         return IMAGES_PATH.CUTE;
-      case 'run':
-        return IMAGES_PATH.RUN; // 상수에 RUN 추가되어 있어야 함
       default:
-        return IMAGES_PATH.NORMAL;
+        return IMAGES_PATH.RUN; // 상수에 RUN 추가되어 있어야 함
     }
   };
 
