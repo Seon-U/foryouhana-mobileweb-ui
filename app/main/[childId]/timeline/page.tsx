@@ -74,6 +74,8 @@ export default async function TimelinePage({
     <main className="min-h-screen bg-white font-hana-regular">
       {/* 고정 상단 헤더 */}
       <Header content="타임라인" />
+
+      {/* 컨텐츠 영역: pb-32를 통해 하단 네비바에 가려지는 부분을 방지합니다. */}
       <div className="p-6 pb-32">
         <TimelineChildToggle kids={kidProfiles} selectedKidId={childIdInt} />
 
