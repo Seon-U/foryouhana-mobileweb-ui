@@ -34,50 +34,37 @@ export default function RegisterComplete() {
         </div>
       </div>
 
-      <Image
-        src={IMAGES_PATH.REGISTER_STAR}
-        width={35}
-        height={35}
-        alt="star"
-        className="absolute top-[52px] left-[40px] z-100"
-      />
-      <Image
-        src={IMAGES_PATH.REGISTER_STAR}
-        width={35}
-        height={35}
-        alt="star"
-        className="absolute top-[93px] left-[146px] z-100 rotate-45"
-      />
-      <Image
-        src={IMAGES_PATH.REGISTER_STAR}
-        width={35}
-        height={35}
-        alt="star"
-        className="absolute top-[84px] left-[283px] z-100"
-      />
-
-      <Image
-        src={IMAGES_PATH.REGISTER_STAR}
-        width={35}
-        height={35}
-        alt="star"
-        className="absolute top-[247px] left-[54px] z-100"
-      />
-      <Image
-        src={IMAGES_PATH.REGISTER_STAR}
-        width={35}
-        height={35}
-        alt="star"
-        className="absolute top-[271px] left-[197px] z-100 rotate-45"
-      />
+      {[
+        'top-[52px] left-[40px]',
+        'top-[93px] left-[146px] rotate-45',
+        'top-[84px] left-[283px]',
+        'top-[247px] left-[54px]',
+        'top-[271px] left-[197px] rotate-45',
+      ].map((position) => (
+        <Image
+          key={position}
+          src={IMAGES_PATH.REGISTER_STAR}
+          width={35}
+          height={35}
+          alt="star"
+          className={`absolute z-100 ${position}`}
+        />
+      ))}
 
       <div className="relative z-30 mt-4 p-5">
         <CustomButton
           preset="greenlong"
           className="font-hana-cm text-[20px] hover:cursor-pointer"
           onClick={() => {
-            sessionStorage.clear();
-            route.push(`/main/${childId}/beforeJoin/test`);
+            if (childId) {
+              sessionStorage.clear();
+              route.push(`/main/${childId}/beforeJoin/test`);
+            } else {
+              console.error(
+                'childId가 세션 스토리지에 없습니다. 홈으로 리디렉션합니다.',
+              );
+              route.push('/');
+            }
           }}
         >
           아이앞으로 서비스 들어가기
