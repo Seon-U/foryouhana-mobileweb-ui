@@ -140,7 +140,7 @@ export default function AdditionalFundSetupPage() {
     investType === 'REGULAR' ? years && monthlyAmount && transferDay : months;
 
   return (
-    <div className="flex min-h-screen flex-col bg-white px-3 py-3">
+    <div className="h-full bg-white">
       <Header content="납입 금액 및 기간 설정하기" />
 
       <main className="flex flex-1 flex-col px-3">

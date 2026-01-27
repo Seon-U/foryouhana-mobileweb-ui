@@ -24,7 +24,7 @@ export default function AdditionalFundCompletePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white px-3 py-3">
+    <div className="h-full bg-white">
       <Header content="가입 완료" />
 
       <main className="flex flex-1 flex-col items-center justify-center px-3">
