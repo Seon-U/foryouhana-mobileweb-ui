@@ -227,44 +227,55 @@ async function main() {
     },
   });
 
-  // 일반 상품 펀드 생성
-
-  // 3. 자녀 2명 생성 (제약 조건 준수)
-  // 자녀 1: 유기정기금 YES (goal_money, monthly_money 필수)
-  const child1 = await prisma.child.create({
-    data: {
+  const child1 = await prisma.child.upsert({
+    where: { identity_hash: 'hash_child_1_unique' }, // 중복 체크 기준
+    update: {
+      name: '하나둘',
+      profile_pic: '/file/자녀1.jpg',
+      is_promise_fixed: true,
+      goal_money: 20000000n,
+      monthly_money: 100000n,
+      invest_type: invest_type.OFFENSIVE,
+    },
+    create: {
       parent_id: parent.id,
       name: '하나둘',
-      profile_pic: '/file/자녀1.jpg', //자녀 프로필 이미지 경로 명시
+      profile_pic: '/file/자녀1.jpg',
       born_date: new Date('2015-01-01'),
       is_promise_fixed: true,
       goal_money: 20000000n,
       monthly_money: 100000n,
       invest_type: invest_type.OFFENSIVE,
       identity_hash: 'hash_child_1_unique',
-      start_date: new Date('2024-01-01'), // 증여 플랜 시작날짜
-      end_date: new Date('2033-12-31'),   // 증여 플랜 종료날짜
+      start_date: new Date('2024-01-01'),
+      end_date: new Date('2033-12-31'),
     },
   });
 
-  const child2 = await prisma.child.create({
-    data: {
+  // 자녀 2: 유기정기금 NO (성인 가정)
+  const child2 = await prisma.child.upsert({
+    where: { identity_hash: 'hash_child_2_unique' }, // 중복 체크 기준
+    update: {
+      name: '하나셋',
+      profile_pic: '/file/자녀2.jpg',
+      invest_type: invest_type.DEFENSIVE,
+    },
+    create: {
       parent_id: parent.id,
       name: '하나셋',
       profile_pic: '/file/자녀2.jpg',
       born_date: new Date('2005-05-05'),
-      is_promise_fixed: false, // 0이므로
-      goal_money: null, // 반드시 null
-      monthly_money: null, // 반드시 null
+      is_promise_fixed: false,
+      goal_money: null,
+      monthly_money: null,
       invest_type: invest_type.DEFENSIVE,
       identity_hash: 'hash_child_2_unique',
-      start_date: new Date('2024-01-01'), // 증여 플랜 시작날짜
-      end_date: new Date('2028-12-31'),   // 증여 플랜 종료날짜
+      start_date: new Date('2024-01-01'),
+      end_date: new Date('2028-12-31'),
     },
   });
 
   // 4. 계좌 생성 (부모 1, 자녀 1, 자녀 펀드 2)
-  // 부모의 입출금 계좌 (스키마상 child_id가 필수이므로 첫째에게 연결)
   const parentDeposit = await prisma.account.create({
     data: {
       child_id: child1.id,
