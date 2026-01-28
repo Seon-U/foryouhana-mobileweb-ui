@@ -12,6 +12,7 @@ export default function MethodSection({
   isFixed,
   period,
   amount,
+  isBlocked,
   onChangeAmount,
   onChangePeriod,
 }: {
@@ -20,6 +21,7 @@ export default function MethodSection({
   isFixed: boolean;
   period: number;
   amount: number;
+  isBlocked: boolean;
   onChangeAmount: (value: number | null) => void;
   onChangePeriod: (value: number | null) => void;
 }) {
@@ -32,7 +34,6 @@ export default function MethodSection({
             trueLabel="정기 이체"
             value={isRegular}
             onChange={(v) => {
-              //   setGiftMethod(v);
               onChange(v === true ? GIFT_METHOD.REGULAR : GIFT_METHOD.FLEXIBLE);
             }}
           />
@@ -60,28 +61,20 @@ export default function MethodSection({
           <div>
             <TitlePlanSelect title="증여 기간" />
             <InputMonth
-              disabled={isFixed ?? false}
+              disabled={(isFixed && !isBlocked) ?? false}
               value={period ?? undefined}
               unit="개월"
-              className={
-                isFixed
-                  ? 'h-[42px] w-[155px] bg-hana-gray-300 font-hana-regular text-hana-gray-600'
-                  : 'h-[42px] w-[155px] bg-hana-light-green font-hana-regular'
-              }
+              className="h-[42px] w-[155px] bg-hana-light-green font-hana-regular"
               onChange={(v) => onChangePeriod(v ?? null)}
             />
           </div>
           <div>
             <TitlePlanSelect title="월 증여액" />
             <InputMonth
-              disabled={isFixed ?? false}
+              disabled={(isFixed && !isBlocked) ?? false}
               value={amount ?? undefined}
               unit="원"
-              className={
-                isFixed
-                  ? 'h-[42px] w-[155px] bg-hana-gray-300 font-hana-regular text-hana-gray-600'
-                  : 'h-[42px] w-[155px] bg-hana-light-green font-hana-regular'
-              }
+              className="h-[42px] w-[155px] bg-hana-light-green font-hana-regular"
               onChange={(v) => onChangeAmount(v ?? null)}
             />
           </div>

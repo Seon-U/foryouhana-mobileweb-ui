@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import { getGiftPeriodMonths } from '@/lib/utils';
 import FixedPlanSection from './FixedPlanSection';
 import GiftPlanSection, { GIFT_METHOD } from './GiftPlanSection';
+import MainSection from './MainSection';
 import PensionSelection from './PensionSelection';
 
 /**
@@ -67,29 +68,13 @@ export default async function PlanEdit({ params }: PageProps) {
   return (
     <div className="flex flex-col">
       <Header content="플랜 직접 수정하기" />
-      <main className="flex-1">
-        <div className="grid w-92.25 gap-3">
-          <h1 className="font-hana-light">
-            원하는 대로 증여 계획을 조정해보세요.
-          </h1>
-        </div>
-        <div className="my-2 grid gap-2 rounded-2xl border border-hana-gray-300 p-4">
-          <PensionSelection prev={isPension} />
-          <GiftPlanSection
-            method={method}
-            period={period}
-            amount={Number(monthlyMoney)}
-            isFixed={isFixedGift}
-          />
-          <hr className="my-4 border-hana-gray-400" />
-          <FixedPlanSection prev={isFixedGift} />
-        </div>
-      </main>
-
-      <div className="grid justify-center gap-2 pt-4">
-        <CustomButton preset="lightgraylong">돌아가기</CustomButton>
-        <CustomButton preset="greenlong">이 플랜으로 변경하기</CustomButton>
-      </div>
+      <MainSection
+        monthlyMoney={Number(monthlyMoney)}
+        period={period ?? 0}
+        isFixedGift={isFixedGift}
+        method={method}
+        isPension={isPension}
+      ></MainSection>
     </div>
   );
 }
