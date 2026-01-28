@@ -7,8 +7,8 @@ import { prisma } from '@/lib/prisma';
 
 /**
  * @page: 자녀 & 자녀 입출금 계좌 생성
- * @description: 자녀 및 목표/원천 계좌를 트랜잭션으로 생성하는 액션입니다.
- * @author: 승빈 (Gemmin Teacher's Assistant)
+ * @description: 자녀 및 목표/원천 계좌를 트랜잭션으로 생성하며, 중복 계좌 생성을 방지합니다.
+ * @author: 승빈
  * @date: 2026-01-28
  */
 
@@ -53,9 +53,13 @@ export async function createChildAndAccount(
   parentId: number,
 ) {
   try {
-    // 0. 기초 데이터 유효성 검사
+    // 0. 기초 데이터 및 parentId 유효성 검사
     if (!sessionData || !sessionData.plan) {
       throw new Error('전달된 플랜 데이터가 유효하지 않습니다.');
+    }
+
+    if (!parentId || Number.isNaN(parentId)) {
+      throw new Error('유효한 부모 ID가 필요합니다. 다시 로그인해주세요.');
     }
 
     const { child_name, plan } = sessionData;
@@ -77,7 +81,7 @@ export async function createChildAndAccount(
       endDate.setMonth(startDate.getMonth() + in_month);
     }
 
-    // 생일 날짜 객체 안전 생성 (시간 자정 고정)
+    // 생일 날짜 객체 안전 생성
     const bornDate = new Date(
       child_birth.year,
       child_birth.month - 1,
@@ -93,7 +97,7 @@ export async function createChildAndAccount(
     const result = await prisma.$transaction(async (tx) => {
       // 1. 자녀 생성/업데이트 (Upsert)
       const child = await tx.child.upsert({
-        where: { identity_hash: identityHash } as Prisma.childWhereUniqueInput,
+        where: { identity_hash: identityHash },
         update: {
           name: finalName,
           goal_money: goal_money ? BigInt(goal_money) : 0n,
@@ -104,7 +108,7 @@ export async function createChildAndAccount(
           end_date: endDate,
         },
         create: {
-          parent_id: parentId,
+          parent_id: parentId, // 🚀 전달받은 parentId 사용
           name: finalName,
           born_date: bornDate,
           goal_money: goal_money ? BigInt(goal_money) : 0n,
@@ -129,33 +133,38 @@ export async function createChildAndAccount(
         },
       });
 
-      // 2. 투자 원천용 계좌 (Source Account) 생성
-      const sourceAccount = await tx.account.create({
-        data: {
-          child_id: child.id,
-          acc_num: generateSecureAccNum('1002-888'),
-          acc_type:
-            acc_type === 'PENSION'
-              ? account_acc_type.PENSION
-              : account_acc_type.DEPOSIT,
-          opened_at: new Date('2024-01-01'),
-          deposit: generateSecureDeposit(),
-          in_type: false,
-        },
-      });
+      // 2. [수정부] 기존 원천 계좌(gift_account_id)가 있는지 체크하여 고아 데이터 방지
+      let finalChild = child;
 
-      // 3. 자녀 정보에 원천 계좌(gift_account_id) 연결 업데이트
-      const finalChild = await tx.child.update({
-        where: { id: child.id },
-        data: { gift_account_id: sourceAccount.id },
-      });
+      if (!child.gift_account_id) {
+        // 원천 계좌가 없을 때만 새로 생성
+        const sourceAccount = await tx.account.create({
+          data: {
+            child_id: child.id,
+            acc_num: generateSecureAccNum('1002-888'),
+            acc_type:
+              acc_type === 'PENSION'
+                ? account_acc_type.PENSION
+                : account_acc_type.DEPOSIT,
+            opened_at: new Date('2024-01-01'),
+            deposit: generateSecureDeposit(),
+            in_type: false,
+          },
+        });
+
+        // 생성된 계좌를 자녀 정보에 연결
+        finalChild = await tx.child.update({
+          where: { id: child.id },
+          data: { gift_account_id: sourceAccount.id },
+        });
+      }
 
       return finalChild;
     });
 
     return { success: true, childId: result.id };
   } catch (error) {
-    console.error('DB 저장 중 치명적 오류 발생 (Rollback):', error);
+    console.error('DB 저장 중 오류 발생 (Rollback):', error);
     return {
       success: false,
       error:
