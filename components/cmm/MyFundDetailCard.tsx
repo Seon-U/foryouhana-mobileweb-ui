@@ -52,7 +52,7 @@ export function MyFundDetailCard({
   return (
     <article
       className={cn(
-        'w-91.25 rounded-2xl border border-hana-gray-300 p-3 shadow-md',
+        'w-full rounded-2xl border border-hana-gray-300 p-3 shadow-md',
         getCardClassName(variant),
         className,
       )}
