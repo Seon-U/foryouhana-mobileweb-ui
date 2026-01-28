@@ -7,6 +7,7 @@
 
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { serializeAccount, serializeAccountWithFund } from '@/lib/serializers';
 import DepositClient from './DepositClient';
 
 type Props = {
@@ -63,37 +64,9 @@ export default async function DepositPage({ params }: Props) {
       acc.id !== accountIdNum,
   );
 
-  // BigInt를 직렬화 가능한 형태로 변환
-  const serializedTargetAccount = {
-    ...targetAccount,
-    deposit: Number(targetAccount.deposit),
-    plus_money: Number(targetAccount.plus_money),
-    plus_rate: Number(targetAccount.plus_rate),
-    fund: targetAccount.fund
-      ? {
-          ...targetAccount.fund,
-          total_money: Number(targetAccount.fund.total_money),
-          total_fee: Number(targetAccount.fund.total_fee),
-          sell_fee: Number(targetAccount.fund.sell_fee),
-          plus_1: targetAccount.fund.plus_1
-            ? Number(targetAccount.fund.plus_1)
-            : null,
-          plus_5: targetAccount.fund.plus_5
-            ? Number(targetAccount.fund.plus_5)
-            : null,
-          plus_10: targetAccount.fund.plus_10
-            ? Number(targetAccount.fund.plus_10)
-            : null,
-        }
-      : null,
-  };
-
-  const serializedSourceAccounts = sourceAccounts.map((acc) => ({
-    ...acc,
-    deposit: Number(acc.deposit),
-    plus_money: Number(acc.plus_money),
-    plus_rate: Number(acc.plus_rate),
-  }));
+  // BigInt/Decimal을 직렬화 가능한 형태로 변환
+  const serializedTargetAccount = serializeAccountWithFund(targetAccount);
+  const serializedSourceAccounts = sourceAccounts.map(serializeAccount);
 
   return (
     <DepositClient
