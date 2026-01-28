@@ -11,7 +11,6 @@ import { ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Header from '@/components/cmm/Header';
-import { BottomNavBar } from '@/components/cmm/NavBar';
 import NumericKeypad from '@/components/deposit/NumericKeypad';
 import { formatWon } from '@/lib/utils';
 import { processDeposit } from './actions';
@@ -185,10 +184,9 @@ export default function DepositClient({
     <div className="relative flex h-screen flex-col bg-white">
       <Header content="입금하기" />
 
-      {/* 상단 영역 */}
+      {/* 상단 영역 - 입금 대상 계좌 */}
       <div className="px-5">
-        {/* 입금 대상 계좌 (고정 - 드롭다운 없음) */}
-        <div className="mt-2 mb-4">
+        <div className="mt-2">
           <p className="font-hana-medium text-[14px] text-gray-900">
             {targetAccount.fund?.name || '펀드 계좌'}{' '}
             <span className="font-hana-regular">으로</span>
@@ -199,23 +197,23 @@ export default function DepositClient({
         </div>
       </div>
 
-      {/* 금액 + 출금계좌 영역 (키패드 위에 배치) */}
-      <div className="mt-auto px-5">
-        {/* 금액 표시 영역 - 0원이면 "얼마를 보낼까요?", 아니면 금액 */}
-        <div className="mb-4 text-center">
-          {amount === 0 ? (
-            <p className="font-hana-bold text-[20px] text-gray-900">
-              얼마를 보낼까요?
-            </p>
-          ) : (
-            <p className="font-hana-bold text-[24px] text-gray-900">
-              {formatWon(amount)}
-              <span className="ml-1 font-hana-medium text-[18px]">원</span>
-            </p>
-          )}
-        </div>
+      {/* 금액 표시 영역 - 입금계좌와 출금계좌 사이 중앙 배치 */}
+      <div className="flex flex-1 items-center justify-center px-5">
+        {amount === 0 ? (
+          <p className="font-hana-bold text-[20px] text-gray-900">
+            얼마를 보낼까요?
+          </p>
+        ) : (
+          <p className="font-hana-bold text-[24px] text-gray-900">
+            {formatWon(amount)}
+            <span className="ml-1 font-hana-medium text-[18px]">원</span>
+          </p>
+        )}
+      </div>
 
-        {/* 출금 계좌 선택 (드롭다운) - 더 어두운 배경 */}
+      {/* 하단 영역 - 출금계좌 + 키패드 */}
+      <div className="px-5">
+        {/* 출금 계좌 선택 (드롭다운) */}
         <div className="relative mb-4">
           <button
             type="button"
@@ -280,14 +278,14 @@ export default function DepositClient({
         )}
 
         {/* 빠른 금액 버튼 */}
-        <div className="mb-2 flex justify-center gap-1.5">
+        <div className="mb-6 flex justify-center gap-2">
           {quickAmounts.map((item) => (
             <button
               key={item.label}
               type="button"
               onClick={() => handleQuickAmount(item.value)}
               disabled={isSubmitting}
-              className="rounded-full border border-hana-gray-300 bg-white px-2.5 py-1 font-hana-regular text-[12px] text-gray-600 transition-all active:scale-95 active:bg-hana-gray-200 disabled:opacity-50"
+              className="rounded-full bg-[#EFF0F4] px-3 py-1.5 font-hana-regular text-[13px] text-gray-600 transition-all active:scale-95 active:bg-hana-gray-300 disabled:opacity-50"
             >
               {item.label}
             </button>
@@ -295,7 +293,7 @@ export default function DepositClient({
         </div>
 
         {/* 숫자 키패드 */}
-        <div className="pb-[70px]">
+        <div className="pb-4">
           <NumericKeypad
             onNumberPress={handleNumberPress}
             onBackspace={handleBackspace}
@@ -304,9 +302,6 @@ export default function DepositClient({
           />
         </div>
       </div>
-
-      {/* 하단 네비게이션 바 */}
-      <BottomNavBar />
     </div>
   );
 }
