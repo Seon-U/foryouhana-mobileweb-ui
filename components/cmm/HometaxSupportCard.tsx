@@ -56,7 +56,7 @@ export const HometaxReportCard = ({
 
         <div className="space-y-2 pt-0">
           <p className="font-hana-medium text-[15px]">
-            3. 신고 후 아래의 버튼을 눌러 본 서비스에 변경 <br></br>
+            3. 신고 후 아래의 버튼을 눌러 본 서비스에 변경 <br />
             <span className="mx-2">내용을 적용해주세요.</span>
           </p>
 
