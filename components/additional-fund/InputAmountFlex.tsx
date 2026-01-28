@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useNumericInput } from '@/hooks/useNumericInput';
 import { cn } from '@/lib/utils';
 
 /**
@@ -21,6 +21,8 @@ type InputAmountFlexProps = {
 
 const MAX_INT = 2147483647;
 
+const formatWithComma = (num: number) => num.toLocaleString();
+
 export function InputAmountFlex({
   value,
   onChange,
@@ -29,32 +31,12 @@ export function InputAmountFlex({
   showLabel = true,
   className,
 }: InputAmountFlexProps) {
-  const [inputValue, setInputValue] = useState(value?.toLocaleString() ?? '');
-
-  useEffect(() => {
-    setInputValue(value?.toLocaleString() ?? '');
-  }, [value]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/[^0-9]/g, '');
-
-    if (raw === '') {
-      setInputValue('');
-      onChange?.(undefined);
-      return;
-    }
-
-    const num = Number.parseInt(raw, 10);
-
-    if (num > MAX_INT) {
-      setInputValue(MAX_INT.toLocaleString());
-      onChange?.(MAX_INT);
-      return;
-    }
-
-    setInputValue(num.toLocaleString());
-    onChange?.(num);
-  };
+  const { inputValue, handleChange } = useNumericInput({
+    value,
+    onChange,
+    max: MAX_INT,
+    format: formatWithComma,
+  });
 
   return (
     <div className={cn('flex-1', className)}>

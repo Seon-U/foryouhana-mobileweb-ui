@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useNumericInput } from '@/hooks/useNumericInput';
 import { cn } from '@/lib/utils';
 
 /**
@@ -23,38 +23,12 @@ export function InputDayFlex({
   placeholder = '',
   className,
 }: InputDayFlexProps) {
-  const [inputValue, setInputValue] = useState(value?.toString() ?? '');
-
-  useEffect(() => {
-    setInputValue(value?.toString() ?? '');
-  }, [value]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/[^0-9]/g, '');
-
-    if (raw === '') {
-      setInputValue('');
-      onChange?.(undefined);
-      return;
-    }
-
-    const num = Number.parseInt(raw, 10);
-
-    if (num > 31) {
-      setInputValue('31');
-      onChange?.(31);
-      return;
-    }
-
-    if (num < 1 && raw !== '') {
-      setInputValue('1');
-      onChange?.(1);
-      return;
-    }
-
-    setInputValue(raw);
-    onChange?.(num);
-  };
+  const { inputValue, handleChange } = useNumericInput({
+    value,
+    onChange,
+    min: 1,
+    max: 31,
+  });
 
   return (
     <label

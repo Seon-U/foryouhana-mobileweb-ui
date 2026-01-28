@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useNumericInput } from '@/hooks/useNumericInput';
 import { cn } from '@/lib/utils';
 
 /**
@@ -29,38 +29,12 @@ export function InputYear({
   showLabel = true,
   className,
 }: InputYearProps) {
-  const [inputValue, setInputValue] = useState(value?.toString() ?? '');
-
-  useEffect(() => {
-    setInputValue(value?.toString() ?? '');
-  }, [value]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/[^0-9]/g, '');
-
-    if (raw === '') {
-      setInputValue('');
-      onChange?.(undefined);
-      return;
-    }
-
-    const num = Number.parseInt(raw, 10);
-
-    if (num > MAX_YEAR) {
-      setInputValue(MAX_YEAR.toString());
-      onChange?.(MAX_YEAR);
-      return;
-    }
-
-    if (num < 1 && raw !== '') {
-      setInputValue('1');
-      onChange?.(1);
-      return;
-    }
-
-    setInputValue(raw);
-    onChange?.(num);
-  };
+  const { inputValue, handleChange } = useNumericInput({
+    value,
+    onChange,
+    min: 1,
+    max: MAX_YEAR,
+  });
 
   return (
     <div className={cn('flex-1', className)}>
