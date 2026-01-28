@@ -39,7 +39,7 @@ export function MyFundCard({
   return (
     <article
       className={cn(
-        'w-78 rounded-2xl border border-hana-gray-300 bg-white p-5 shadow-md',
+        'w-78 rounded-2xl border border-hana-gray-300 bg-white p-5',
         className,
       )}
       aria-label="내 펀드 카드"
