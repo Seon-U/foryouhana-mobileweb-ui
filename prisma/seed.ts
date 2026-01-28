@@ -410,7 +410,7 @@ async function main() {
       acc_num: '333-PENSION-003',
       acc_type: account_acc_type.PENSION,
       opened_at: new Date('2024-02-05'),
-      target_date: addMonths(new Date('2024-02-05'), fundBond.maturity_period!),
+      target_date: fundBond.maturity_period ? addMonths(new Date('2024-02-05'), fundBond.maturity_period) : null,
       deposit: 200000n,
       plus_rate: 2.1,
       plus_money: 4200n,
