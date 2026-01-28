@@ -46,7 +46,7 @@ export function useNumericInput({
       return;
     }
 
-    let num = Number.parseInt(raw, 10);
+    const num = Number.parseInt(raw, 10);
 
     if (max !== undefined && num > max) {
       setInputValue(format(max));

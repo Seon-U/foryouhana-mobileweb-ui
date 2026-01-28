@@ -60,6 +60,7 @@ export function SetupForm({
 
   // 폼 상태
   const [investType, setInvestType] = useState<InvestType>(initialInvestType);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // 기간은 개월 단위로 통합 관리 (정기/자유 전환 시 동기화)
   const [totalMonths, setTotalMonths] = useState<number | undefined>(108);
   const [monthlyAmount, setMonthlyAmount] = useState<number | undefined>(50);
@@ -85,10 +86,16 @@ export function SetupForm({
   };
 
   const handleSubmit = () => {
-    if (totalMonths === undefined) return;
+    // 기존 에러 초기화
+    setErrorMessage(null);
+
+    if (totalMonths === undefined) {
+      setErrorMessage('납입 기간을 선택해주세요.');
+      return;
+    }
 
     if (investType === 'REGULAR' && (!monthlyAmount || !transferDay)) {
-      alert('납입 금액과 납입일을 입력해주세요.');
+      setErrorMessage('납입 금액과 납입일을 입력해주세요.');
       return;
     }
 
@@ -108,7 +115,7 @@ export function SetupForm({
           `/main/${childId}/additional-fund/complete?accountNumber=${result.accountNumber}`,
         );
       } else {
-        alert(result.error || '펀드 가입에 실패했습니다.');
+        setErrorMessage(result.error || '펀드 가입에 실패했습니다.');
       }
     });
   };
@@ -205,6 +212,9 @@ export function SetupForm({
 
       {/* 하단 버튼 */}
       <div className="mt-auto flex flex-col gap-3 px-3 pb-6">
+        {errorMessage && (
+          <p className="text-center text-[14px] text-red-500">{errorMessage}</p>
+        )}
         <CustomButton preset="graylong" onClick={handleBack}>
           돌아가기
         </CustomButton>
