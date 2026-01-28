@@ -15,7 +15,7 @@ type Props = {
 export default async function home({ params }: Props) {
   const { childId } = await params;
   const currentChildId = Number(childId);
-  const PARENT_ID=2;
+  const PARENT_ID = 2;
 
   // 1. 이번 달 시작일 계산 (예: 2026-01-01 00:00:00)
   const now = new Date();

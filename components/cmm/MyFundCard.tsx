@@ -65,7 +65,7 @@ export function MyFundCard({
 
       <div className="mt-3 flex items-baseline gap-1 font-hana-cm text-hana-dark-navy">
         <span className="text-[16px]">총 {amountEok}원/</span>
-          <span className="text-[10px]"> 매달 {monthlyAmountWon}원 납입</span>
+        <span className="text-[10px]"> 매달 {monthlyAmountWon}원 납입</span>
       </div>
     </article>
   );

@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 type Props = {
-  childId: string
+  childId: string;
   deposit: number; // 통장 잔액
   thisMonthAmount: number; // 이번 달 입금액
   onDetailClick?: () => void; // 상세 내역 클릭 이벤트

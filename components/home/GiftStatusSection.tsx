@@ -6,7 +6,7 @@ import AccGiftCard from '../cmm//AccGiftCard';
 import { CustomMoneyProgress } from '../cmm/CustomMoneyProgress';
 
 type Props = {
-  accumulatedAmount: number; // 연저펀, 또는 펀드 납입 금액 
+  accumulatedAmount: number; // 연저펀, 또는 펀드 납입 금액
 };
 
 export default function GiftStatusSection({ accumulatedAmount }: Props) {

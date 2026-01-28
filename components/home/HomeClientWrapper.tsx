@@ -63,8 +63,7 @@ export default function HomeClientWrapper({
             </Badge>
           )}
 
-          <Badge
-            className="w-fit whitespace-nowrap border-none bg-hana-pastel-green px-3 py-1.5 font-bold text-hana-linear-deep-green text-xs shadow-sm">
+          <Badge className="w-fit whitespace-nowrap border-none bg-hana-pastel-green px-3 py-1.5 font-bold text-hana-linear-deep-green text-xs shadow-sm">
             {is_promise_fixed ? '유기정기금 적용 중' : '유기정기금 미적용 중'}
           </Badge>
         </div>
