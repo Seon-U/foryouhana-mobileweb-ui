@@ -2,32 +2,51 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { createChildAndAccount } from '@/actions/child.action';
 import { CustomButton } from '@/components/cmm/CustomButton';
 import { IMAGES_PATH } from '@/constants/images';
 
 /**
  * @page: 서비스 가입완료
- * @description: 서비스 가입완료 페이지
- * @author: 승빈
+ * @description: 서비스 가입완료 페이지. 자녀 및 자녀 입출금 생성 후 db에 저장합니다.
+ * @author: 승빈 (Gemmin Teacher)
  * @date: 2026-01-28
  */
 
 export default function RegisterComplete() {
   const route = useRouter();
-  const [childId, setChildId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
+  const handleStartService = async () => {
+    if (isSubmitting) return;
+
     const rawData = sessionStorage.getItem('giftPlan');
-    if (rawData) {
-      try {
-        const parsed = JSON.parse(rawData);
-        setChildId(parsed.child_id || null);
-      } catch (e) {
-        console.error('세션 파싱 에러:', e);
-      }
+    if (!rawData) {
+      console.error('가입 정보를 찾을 수 없습니다.');
+      route.push('/');
+      return;
     }
-  }, []);
+
+    setIsSubmitting(true);
+
+    try {
+      const sessionData = JSON.parse(rawData);
+
+      const result = await createChildAndAccount(sessionData);
+
+      if (result.success && result.childId) {
+        sessionStorage.clear();
+        route.push(`/main/${result.childId}/beforeJoin/test`);
+      } else {
+        alert(result.error || '저장 중 오류가 발생했습니다.');
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error('처리 중 에러 발생:', error);
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="-m-3 relative z-0 min-h-[calc(100%+1.5rem)] overflow-hidden bg-hana-pastel-mint/10">
@@ -72,21 +91,13 @@ export default function RegisterComplete() {
       <div className="relative z-30 mt-4 p-5">
         <CustomButton
           preset="greenlong"
-          className="font-hana-cm text-[20px] hover:cursor-pointer"
-          onClick={() => {
-            if (childId) {
-              const finalId = childId;
-              sessionStorage.clear();
-              route.push(`/main/${finalId}/beforeJoin/test`);
-            } else {
-              console.error(
-                'childId가 세션 스토리지에 없습니다. 홈으로 리디렉션합니다.',
-              );
-              route.push('/');
-            }
-          }}
+          className="font-hana-cm text-[20px] hover:cursor-pointer disabled:opacity-70"
+          onClick={handleStartService}
+          disabled={isSubmitting}
         >
-          아이앞으로 서비스 들어가기
+          {isSubmitting
+            ? '아이 정보를 등록 중...'
+            : '아이앞으로 서비스 들어가기'}
         </CustomButton>
       </div>
     </div>
