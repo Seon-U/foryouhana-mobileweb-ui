@@ -15,7 +15,12 @@ import { IMAGES_PATH } from '@/constants/images';
 export default function DepositCompletePage() {
   const router = useRouter();
   const params = useParams();
-  const childId = params.childId as string;
+
+  if (typeof params.childId !== 'string') {
+    return null;
+  }
+
+  const childId = params.childId;
 
   return (
     <div className="-m-3 relative z-0 min-h-[calc(100%+1.5rem)] overflow-hidden bg-hana-pastel-mint/10">
