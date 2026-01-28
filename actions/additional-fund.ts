@@ -45,19 +45,31 @@ export async function createFundAccount(
     transferDay,
   } = input;
 
+  // 정기적립식의 경우 필수 값 검증 (트랜잭션 밖에서)
+  if (investType === 'REGULAR' && (!monthlyAmount || !transferDay)) {
+    return {
+      success: false,
+      error: '정기적립식은 월 납입액과 납입일이 필요합니다.',
+    };
+  }
+
+  const MAX_RETRY_COUNT = 5;
+
   try {
-    // 계좌번호 생성
-    const accNum = generateAccountNumber();
+    const result = await prisma.$transaction(async (tx) => {
+      // 중복되지 않는 계좌번호 생성 (재시도 로직)
+      let accNum = '';
+      for (let attempt = 0; attempt < MAX_RETRY_COUNT; attempt++) {
+        accNum = generateAccountNumber();
+        const existing = await tx.account.findFirst({
+          where: { acc_num: accNum },
+        });
+        if (!existing) break;
+        if (attempt === MAX_RETRY_COUNT - 1) {
+          throw new Error('ACCOUNT_NUMBER_GENERATION_FAILED');
+        }
+      }
 
-    // 정기적립식의 경우 필수 값 검증
-    if (investType === 'REGULAR' && (!monthlyAmount || !transferDay)) {
-      return {
-        success: false,
-        error: '정기적립식은 월 납입액과 납입일이 필요합니다.',
-      };
-    }
-
-    const newAccount = await prisma.$transaction(async (tx) => {
       // 펀드 계좌 생성
       const account = await tx.account.create({
         data: {
@@ -87,15 +99,24 @@ export async function createFundAccount(
         });
       }
 
-      return account;
+      return { accountId: account.id, accountNumber: accNum };
     });
 
     return {
       success: true,
-      accountId: newAccount.id,
-      accountNumber: accNum,
+      accountId: result.accountId,
+      accountNumber: result.accountNumber,
     };
   } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === 'ACCOUNT_NUMBER_GENERATION_FAILED'
+    ) {
+      return {
+        success: false,
+        error: '계좌번호 생성에 실패했습니다. 잠시 후 다시 시도해주세요.',
+      };
+    }
     console.error('펀드 계좌 생성 실패:', error);
     return {
       success: false,
