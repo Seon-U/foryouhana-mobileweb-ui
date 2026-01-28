@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import Header from '@/components/cmm/Header';
 import { SetupForm } from '@/components/additional-fund/SetupForm';
+import Header from '@/components/cmm/Header';
 import { prisma } from '@/lib/prisma';
 
 /**

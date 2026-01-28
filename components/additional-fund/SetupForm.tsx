@@ -9,10 +9,10 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import type { fund_saving_type } from '@/lib/generated/prisma/client';
-import { formatWon } from '@/lib/utils';
 import { createFundAccount } from '@/actions/additional-fund';
 import { CustomButton } from '@/components/cmm/CustomButton';
+import type { fund_saving_type } from '@/lib/generated/prisma/client';
+import { formatWon } from '@/lib/utils';
 import { InputAmountFlex } from './InputAmountFlex';
 import { InputDayFlex } from './InputDayFlex';
 import { InputMonth } from './InputMonth';

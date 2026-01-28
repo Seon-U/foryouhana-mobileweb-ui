@@ -27,7 +27,6 @@ export default function analysisMethodPage() {
         };
 
     const sessionData = {
-      ...prevData.plan,
       child_id: null,
       isSigned: false, // ✅ 요청하신 대로 false 설정
       updated_at: new Date().toISOString(),
@@ -37,7 +36,7 @@ export default function analysisMethodPage() {
         monthly_money: 416000,
         is_promise_fixed: true,
         in_month: 120,
-        acc_type: 'PENSIOIN',
+        acc_type: 'PENSION',
         in_type: true,
         //임시 MYDATE
       },
@@ -89,10 +88,11 @@ export default function analysisMethodPage() {
         />
       </div>
 
-      <div className="flex flex-col gap-3 px-3 pt-5 pb-6">
+      <div className="flex flex-col gap-3 px-3 pt-10 pb-3">
         <CustomButton preset="lightgraylong" onClick={saveMyData}>
           간단 분석으로 증여 플랜 시작하기
         </CustomButton>
+
         <CustomButton
           preset="greenlong"
           onClick={() => router.push('/onboarding/chatbot')}
