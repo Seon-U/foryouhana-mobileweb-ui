@@ -46,106 +46,113 @@ export default async function ProductDetailPage({ params }: Props) {
   const { id } = await params;
 
   const fundId = Number(id);
-  if (!Number.isFinite(fundId)) {
-    return (
-      <div>
-        <Header content="상품 상세보기" />
-        <div className="p-4 font-hana-cm text-[14px] text-hana-dark-navy">
-          잘못된 접근입니다.
-        </div>
-        <div className="pb-24" />
-        <BottomNavBar />
-      </div>
-    );
-  }
 
-  const fund = await prisma.fund.findUnique({
-    where: { id: fundId },
-    select: {
-      id: true,
-      name: true,
-      company: true,
-      danger: true,
-      type: true,
-      total_fee: true,
-      sell_fee: true,
-      set_date: true,
-      total_money: true,
-      plus_1: true,
-      plus_5: true,
-      plus_10: true,
-      is_pension: true,
-    },
-  });
+  const isInvalidId = !Number.isFinite(fundId);
 
-  if (!fund) {
-    return (
-      <div>
-        <Header content="상품 상세보기" />
-        <div className="p-4 font-hana-cm text-[14px] text-hana-dark-navy">
-          상품을 찾을 수 없습니다.
-        </div>
-        <div className="pb-24" />
-        <BottomNavBar />
-      </div>
-    );
-  }
-
-  const risk = dangerToRisk(fund.danger);
-
-  const icon = pickIcon(fund.is_pension, fund.type);
-  const logoSrc = getLogoSrc(icon);
+  const fund = isInvalidId
+    ? null
+    : await prisma.fund.findUnique({
+        where: { id: fundId },
+        select: {
+          id: true,
+          name: true,
+          company: true,
+          danger: true,
+          type: true,
+          total_fee: true,
+          sell_fee: true,
+          set_date: true,
+          total_money: true,
+          plus_1: true,
+          plus_5: true,
+          plus_10: true,
+          is_pension: true,
+        },
+      });
 
   return (
-    <div>
-      <Header content="상품 상세보기" />
+    <div className="relative h-full w-full">
+      <div className="grid h-full grid-rows-[auto_1fr_auto] overflow-hidden">
+        <Header content="상품 상세보기" />
 
-      <div className="px-4 pb-24">
-        <FundHeaderSection
-          company={fund.company}
-          logoSrc={logoSrc}
-          icon={icon}
-        />
+        <main
+          className="overflow-y-auto pb-20 [::-webkit-scrollbar]:hidden"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
+        >
+          {isInvalidId ? (
+            <div className="p-4 font-hana-cm text-[14px] text-hana-dark-navy">
+              잘못된 접근입니다.
+            </div>
+          ) : !fund ? (
+            <div className="p-4 font-hana-cm text-[14px] text-hana-dark-navy">
+              상품을 찾을 수 없습니다.
+            </div>
+          ) : (
+            <div className="px-4">
+              {(() => {
+                const risk = dangerToRisk(fund.danger);
+                const icon = pickIcon(fund.is_pension, fund.type);
+                const logoSrc = getLogoSrc(icon);
 
-        <div className="my-3 h-px w-full bg-hana-gray-200" />
+                return (
+                  <>
+                    <FundHeaderSection
+                      company={fund.company}
+                      logoSrc={logoSrc}
+                      icon={icon}
+                    />
 
-        <FundRiskBadge risk={risk} />
+                    <div className="my-3 h-px w-full bg-hana-gray-200" />
 
-        <div className="pt-3 font-hana-bold text-[24px] text-black">
-          {fund.name}
-        </div>
+                    <FundRiskBadge risk={risk} />
 
-        <div className="pt-2 font-hana-cm text-[14px] text-hana-gray-600">
-          <div>글로벌 우량 기업에 투자하여</div>
-          <div>안정적인 수익을 추구하는 펀드</div>
-        </div>
+                    <div className="pt-3 font-hana-bold text-[24px] text-black">
+                      {fund.name}
+                    </div>
 
-        <FundStatSection
-          plus1={fund.plus_1}
-          totalMoney={fund.total_money}
-          setDate={new Date(fund.set_date)}
-        />
+                    <div className="pt-2 font-hana-cm text-[14px] text-hana-gray-600">
+                      <div>글로벌 우량 기업에 투자하여</div>
+                      <div>안정적인 수익을 추구하는 펀드</div>
+                    </div>
 
-        <div className="my-2 mt-10 h-[8px] w-full bg-hana-gray-100" />
+                    <FundStatSection
+                      plus1={fund.plus_1}
+                      totalMoney={fund.total_money}
+                      setDate={new Date(fund.set_date)}
+                    />
 
-        <PriceTrendSection defaultValue="m6" />
+                    <div className="my-2 mt-10 h-[8px] w-full bg-hana-gray-100" />
 
-        <FundOverviewSection />
+                    <PriceTrendSection defaultValue="m6" />
 
-        <FundMetaGrid
-          company={fund.company}
-          setDate={new Date(fund.set_date)}
-          totalFee={fund.total_fee}
-          sellFee={fund.sell_fee}
-        />
+                    <FundOverviewSection />
 
-        <div className="pt-15 font-hana-bold text-[16px] text-black">
-          이 펀드의 핵심 포인트
-        </div>
-        <FundKeyPointsSection />
+                    <FundMetaGrid
+                      company={fund.company}
+                      setDate={new Date(fund.set_date)}
+                      totalFee={fund.total_fee}
+                      sellFee={fund.sell_fee}
+                    />
+
+                    <div className="pt-15 font-hana-bold text-[16px] text-black">
+                      이 펀드의 핵심 포인트
+                    </div>
+
+                    <FundKeyPointsSection />
+
+                    <div className="h-6" />
+                  </>
+                );
+              })()}
+            </div>
+          )}
+        </main>
+
+        <BottomNavBar />
       </div>
-
-      <BottomNavBar />
     </div>
   );
 }
