@@ -149,6 +149,7 @@ export default function ChatbotSignProcess() {
           const sessionData = {
             child_id: childId,
             isSigned: true,
+            isChatbot: true,
             updated_at: new Date().toISOString(),
             plan: data.dbData,
           };
@@ -251,7 +252,10 @@ ${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
         </div>
         {!loading && (
           <div className="mt-6 flex w-full justify-center">
-            <CustomButton preset="maingreenshort" onClick={() => route.back()}>
+            <CustomButton
+              preset="maingreenshort"
+              onClick={() => route.push(`/main/${childId}/planEdit`)}
+            >
               채팅 완료하기
             </CustomButton>
           </div>
