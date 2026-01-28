@@ -13,6 +13,29 @@ import Header from '@/components/cmm/Header';
  * @date: 2026-01-26
  */
 
+/** 약관 항목 설정 */
+const TERMS_CONFIG = {
+  group1: [
+    { id: 'financial-basic', content: '금융거래 기본약관' },
+    { id: 'pension-savings', content: '연금저축 약관' },
+    { id: 'collective-investment', content: '집합투자규약' },
+    { id: 'investment-product', content: '투자성 상품 설명 확인' },
+  ],
+  group2: [{ id: 'hana-account', content: '하나통장 약관 및 필수확인사항' }],
+} as const;
+
+/** 초기 동의 상태 생성 */
+const createInitialAgreements = (): Record<string, boolean> => {
+  const agreements: Record<string, boolean> = {};
+  for (const term of TERMS_CONFIG.group1) {
+    agreements[term.id] = false;
+  }
+  for (const term of TERMS_CONFIG.group2) {
+    agreements[term.id] = false;
+  }
+  return agreements;
+};
+
 export default function AdditionalFundTermsPage() {
   const router = useRouter();
   const params = useParams();
@@ -20,14 +43,14 @@ export default function AdditionalFundTermsPage() {
   const childId = params.childId as string;
   const fundId = searchParams.get('fundId');
 
-  // 약관 그룹 1: 투자 관련 약관
-  const [agree1_1, setAgree1_1] = useState(false);
-  const [agree1_2, setAgree1_2] = useState(false);
-  const [agree1_3, setAgree1_3] = useState(false);
-  const [agree1_4, setAgree1_4] = useState(false);
+  // 단일 상태 객체로 모든 약관 동의 상태 관리
+  const [agreements, setAgreements] = useState<Record<string, boolean>>(
+    createInitialAgreements,
+  );
 
-  // 약관 그룹 2: 통장 약관
-  const [agree2, setAgree2] = useState(false);
+  const setAgreement = (termId: string, value: boolean) => {
+    setAgreements((prev) => ({ ...prev, [termId]: value }));
+  };
 
   const navigateToTerm = (termId: string) => {
     router.push(
@@ -35,43 +58,21 @@ export default function AdditionalFundTermsPage() {
     );
   };
 
-  const group1Items = [
-    {
-      content: '금융거래 기본약관',
-      checked: agree1_1,
-      onCheckedChange: setAgree1_1,
-      onNavigate: () => navigateToTerm('financial-basic'),
-    },
-    {
-      content: '연금저축 약관',
-      checked: agree1_2,
-      onCheckedChange: setAgree1_2,
-      onNavigate: () => navigateToTerm('pension-savings'),
-    },
-    {
-      content: '집합투자규약',
-      checked: agree1_3,
-      onCheckedChange: setAgree1_3,
-      onNavigate: () => navigateToTerm('collective-investment'),
-    },
-    {
-      content: '투자성 상품 설명 확인',
-      checked: agree1_4,
-      onCheckedChange: setAgree1_4,
-      onNavigate: () => navigateToTerm('investment-product'),
-    },
-  ];
+  const group1Items = TERMS_CONFIG.group1.map((term) => ({
+    content: term.content,
+    checked: agreements[term.id],
+    onCheckedChange: (value: boolean) => setAgreement(term.id, value),
+    onNavigate: () => navigateToTerm(term.id),
+  }));
 
-  const group2Items = [
-    {
-      content: '하나통장 약관 및 필수확인사항',
-      checked: agree2,
-      onCheckedChange: setAgree2,
-      onNavigate: () => navigateToTerm('hana-account'),
-    },
-  ];
+  const group2Items = TERMS_CONFIG.group2.map((term) => ({
+    content: term.content,
+    checked: agreements[term.id],
+    onCheckedChange: (value: boolean) => setAgreement(term.id, value),
+    onNavigate: () => navigateToTerm(term.id),
+  }));
 
-  const allAgreed = agree1_1 && agree1_2 && agree1_3 && agree1_4 && agree2;
+  const allAgreed = Object.values(agreements).every(Boolean);
 
   const handleConfirm = () => {
     if (allAgreed) {
