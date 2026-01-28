@@ -126,8 +126,8 @@ export function SetupForm({
       : totalMonths;
 
   return (
-    <>
-      <main className="flex flex-1 flex-col px-3">
+    <div className="flex h-[calc(100%-65px-12px)] flex-col">
+      <main className="flex-1 overflow-y-auto px-3">
         <h1 className="mt-6 font-bold text-[18px] text-hana-gray-800">
           납입 금액과 기간을
           <br />
@@ -180,11 +180,11 @@ export function SetupForm({
                     {formatWon(totalPayment)}만원
                   </span>
                 </div>
-                {displayYears && monthlyAmount && (
+                {displayYears && monthlyAmount ? (
                   <p className="mt-1 text-right text-[12px] text-hana-gray-500">
                     {displayYears}년 x 12개월 x {formatWon(monthlyAmount)}만원
                   </p>
-                )}
+                ) : null}
               </div>
 
               {/* 증여세 안내 */}
@@ -211,7 +211,7 @@ export function SetupForm({
       </main>
 
       {/* 하단 버튼 */}
-      <div className="mt-auto flex flex-col gap-3 px-3 pb-6">
+      <div className="shrink-0 flex flex-col gap-3 px-3 pb-6">
         {errorMessage && (
           <p className="text-center text-[14px] text-red-500">{errorMessage}</p>
         )}
@@ -226,6 +226,6 @@ export function SetupForm({
           {isPending ? '처리 중...' : '상품 가입하기'}
         </CustomButton>
       </div>
-    </>
+    </div>
   );
 }
