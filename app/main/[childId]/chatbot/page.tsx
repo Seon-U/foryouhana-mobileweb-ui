@@ -71,7 +71,7 @@ export default function ChatbotSignProcess() {
           mainTitle: '마이데이터 불러오기가 완료되었어요!',
           content:
             '금융 자산, 비금융 자산 정보 갱신 완료! ✅\n\n이제 정밀 분석을 통해 맞춤형 플랜을 받아보세요.',
-          isScenario: true, // 갱신 후에도 버튼을 유지하고 싶으면 true, 아니면 false
+          isScenario: true,
         },
       ]);
       setLoading(false);
@@ -198,13 +198,10 @@ ${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
 
   return (
     <div className="flex h-screen w-full flex-col">
-      {/* 1. 상단 헤더 */}
       <Header content="AI 맞춤 증여 플랜" />
 
-      {/* 2. 채팅 영역 */}
       <div className="scrollbar-hide -p-3 w-full flex-1 overflow-y-auto pb-24">
         <div className="flex w-full flex-col p-4">
-          {/* 상단 멘트 */}
           <div className="my-6 flex animate-fade-in-down flex-col items-center justify-center">
             <Image
               src={IMAGES_PATH.STARBOT3D}
@@ -219,7 +216,6 @@ ${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
             </div>
           </div>
 
-          {/* 메시지 리스트 */}
           <div className="w-full space-y-6">
             {messages.map((msg) => (
               <div key={msg.id} className="w-full animate-fade-in-up">
@@ -253,7 +249,6 @@ ${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
             <div ref={messagesEndRef} />
           </div>
         </div>
-        {/* 완료 버튼 (로딩 중 아닐 때만 보임) */}
         {!loading && (
           <div className="mt-6 flex w-full justify-center">
             <CustomButton preset="maingreenshort" onClick={() => route.back()}>
@@ -262,7 +257,6 @@ ${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
           </div>
         )}
       </div>
-      {/* 3. 입력창 (하단 고정) */}
       {showInput && (
         <InputChat
           placeholder={

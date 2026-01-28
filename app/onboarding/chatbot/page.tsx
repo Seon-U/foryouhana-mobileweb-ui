@@ -1,9 +1,11 @@
 'use client';
 
+// [Biome] Import 정렬: next/image -> next/navigation -> react 순
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { getNextChildId } from '@/actions/chatbot.action';
+
+// [Biome] 컴포넌트 Import 정렬
 import CardChatbot from '@/components/cmm/CardChatbot';
 import { CustomButton } from '@/components/cmm/CustomButton';
 import Header from '@/components/cmm/Header';
@@ -30,8 +32,7 @@ export default function chatbotSignProcess() {
   const route = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [currentChildId, setCurrentChildId] = useState<string | null>(null);
-
+  // 초기 메시지
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -45,14 +46,6 @@ export default function chatbotSignProcess() {
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function initId() {
-      const uniqueId = await getNextChildId();
-      setCurrentChildId(uniqueId);
-    }
-    initId();
-  }, []);
-
   // 스크롤 자동 이동
   useEffect(() => {
     if (messages || loading) {
@@ -61,7 +54,7 @@ export default function chatbotSignProcess() {
   }, [messages, loading]);
 
   const handleSendMessage = async (text: string) => {
-    if (loading || !currentChildId) return;
+    if (loading) return;
 
     // 1. 유저 메시지 추가
     const userMsgId = Date.now();
@@ -78,7 +71,7 @@ export default function chatbotSignProcess() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          childId: currentChildId,
+          childId: null,
           userInput: text,
           parentIncome: 60000000,
           parentAssets: 300000000,
@@ -98,7 +91,7 @@ export default function chatbotSignProcess() {
             role: 'ai',
             mainTitle: '앗, 답변하기 어려워요 😅',
             content: data.error,
-            isScenario: false,
+            isScenario: false, // 에러일 때도 버튼 숨김
           },
         ]);
       } else {
@@ -112,13 +105,17 @@ export default function chatbotSignProcess() {
               };
 
           const sessionData = {
-            child_id: currentChildId,
-            isSigned: false,
+            child_id: null,
+            isSigned: false, // ✅ 요청하신 대로 false 설정
             updated_at: new Date().toISOString(),
             plan: { ...prevData.plan, ...data.dbData },
           };
 
           sessionStorage.setItem('giftPlan', JSON.stringify(sessionData));
+          console.log(
+            '✅ 플랜 데이터 저장 완료 (isSigned: false):',
+            sessionData,
+          );
         }
 
         const summaryText = `
@@ -140,7 +137,7 @@ ${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
             role: 'ai',
             mainTitle: '✨ 별벗 맞춤 증여 플랜 도착!',
             content: summaryText,
-            isScenario: false,
+            isScenario: false, // ✅ 버튼 아예 안 보이게 설정 (true -> false)
           },
         ]);
       }
