@@ -16,6 +16,9 @@ import NumericKeypad from '@/components/deposit/NumericKeypad';
 import { formatWon } from '@/lib/utils';
 import { processDeposit } from './actions';
 
+/** 최대 입금 금액 (10억 원) */
+const MAX_DEPOSIT_AMOUNT = 1_000_000_000;
+
 type SerializedFund = {
   id: number;
   name: string;
@@ -85,8 +88,7 @@ export default function DepositClient({
       setAmount(Number.parseInt(num, 10));
     } else {
       const newStr = amountStr + num;
-      // 최대 금액 제한 (10억)
-      if (Number.parseInt(newStr, 10) > 1000000000) return;
+      if (Number.parseInt(newStr, 10) > MAX_DEPOSIT_AMOUNT) return;
       setAmountStr(newStr);
       setAmount(Number.parseInt(newStr, 10));
     }
