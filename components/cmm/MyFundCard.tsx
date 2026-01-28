@@ -23,9 +23,9 @@ type Props = {
 
 function getPaymentLabel(paymentType: PaymentType) {
   if (paymentType === 'regular') {
-    return '자유 적립';
+    return '정기 적립';
   }
-  return '정기 적립';
+  return '자유 적립';
 }
 
 export function MyFundCard({
