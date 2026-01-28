@@ -19,7 +19,6 @@ export default function Menu() {
   const kidsProfile = [
     { id: 1, avatarUrl: '/file/자녀1.jpg' },
     { id: 2, avatarUrl: '/file/자녀2.jpg' },
-    { id: 3, avatarUrl: '/file/자녀3.jpg' },
   ];
 
   // 2. 초기 상태 설정: 유효한 ID면 사용, 아니면 첫 번째 자녀 ID 사용
