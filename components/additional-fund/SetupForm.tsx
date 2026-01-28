@@ -60,15 +60,24 @@ export function SetupForm({
 
   // 폼 상태
   const [investType, setInvestType] = useState<InvestType>(initialInvestType);
-  const [years, setYears] = useState<number | undefined>(9);
-  const [months, setMonths] = useState<number | undefined>(108);
+  // 기간은 개월 단위로 통합 관리 (정기/자유 전환 시 동기화)
+  const [totalMonths, setTotalMonths] = useState<number | undefined>(108);
   const [monthlyAmount, setMonthlyAmount] = useState<number | undefined>(50);
   const [transferDay, setTransferDay] = useState<number | undefined>(25);
 
+  // 정기적립식용 년 단위 변환 (표시용)
+  const displayYears =
+    totalMonths !== undefined ? Math.floor(totalMonths / 12) : undefined;
+
+  // 년 단위 입력 핸들러 (개월로 변환하여 저장)
+  const handleYearChange = (years: number | undefined) => {
+    setTotalMonths(years !== undefined ? years * 12 : undefined);
+  };
+
   // 총 납입액 계산 (정기적립식)
   const totalPayment =
-    investType === 'REGULAR' && years && monthlyAmount
-      ? years * 12 * monthlyAmount
+    investType === 'REGULAR' && displayYears && monthlyAmount
+      ? displayYears * 12 * monthlyAmount
       : 0;
 
   const handleBack = () => {
@@ -76,18 +85,12 @@ export function SetupForm({
   };
 
   const handleSubmit = () => {
-    const periodValid =
-      investType === 'REGULAR' ? years !== undefined : months !== undefined;
-
-    if (!periodValid) return;
+    if (totalMonths === undefined) return;
 
     if (investType === 'REGULAR' && (!monthlyAmount || !transferDay)) {
       alert('납입 금액과 납입일을 입력해주세요.');
       return;
     }
-
-    const totalMonths =
-      investType === 'REGULAR' ? (years ?? 0) * 12 : (months ?? 0);
 
     startTransition(async () => {
       const result = await createFundAccount({
@@ -111,7 +114,9 @@ export function SetupForm({
   };
 
   const isFormValid =
-    investType === 'REGULAR' ? years && monthlyAmount && transferDay : months;
+    investType === 'REGULAR'
+      ? totalMonths && monthlyAmount && transferDay
+      : totalMonths;
 
   return (
     <>
@@ -141,8 +146,8 @@ export function SetupForm({
               {/* 정기적립식: 2열 배치 */}
               <div className="mb-4 flex gap-3">
                 <InputYear
-                  value={years}
-                  onChange={setYears}
+                  value={displayYears}
+                  onChange={handleYearChange}
                   label="납입 기간"
                 />
                 <InputAmountFlex
@@ -168,9 +173,9 @@ export function SetupForm({
                     {formatWon(totalPayment)}만원
                   </span>
                 </div>
-                {years && monthlyAmount && (
+                {displayYears && monthlyAmount && (
                   <p className="mt-1 text-right text-[12px] text-hana-gray-500">
-                    {years}년 x 12개월 x {formatWon(monthlyAmount)}만원
+                    {displayYears}년 x 12개월 x {formatWon(monthlyAmount)}만원
                   </p>
                 )}
               </div>
@@ -188,8 +193,8 @@ export function SetupForm({
               {/* 자유적립식: 납입기간(개월) */}
               <div className="mb-4">
                 <InputMonth
-                  value={months}
-                  onChange={setMonths}
+                  value={totalMonths}
+                  onChange={setTotalMonths}
                   label="납입 기간"
                 />
               </div>
