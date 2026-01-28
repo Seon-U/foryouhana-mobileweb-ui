@@ -36,6 +36,11 @@ export default async function DepositPage({ params }: Props) {
     notFound();
   }
 
+  // target 계좌가 해당 child 소유인지 확인
+  if (targetAccount.child_id !== childIdNum) {
+    notFound();
+  }
+
   // 2. 자녀 정보 조회 (gift_account_id 확인용)
   const child = await prisma.child.findUnique({
     where: { id: childIdNum },
