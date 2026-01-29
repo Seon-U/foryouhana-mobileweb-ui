@@ -9,42 +9,28 @@ datasource db {
 
 model mydata {
   id     Int     @id @default(autoincrement()) @db.UnsignedInt
-  parent parent?
 }
 
-model parent {
+model user{ // 하나은행 계좌 보유자, 부모 자녀 통합 
   id        Int     @id @default(autoincrement()) @db.UnsignedInt
-  mydata_id Int?    @unique @db.UnsignedInt
-  child     child[]
-  mydata    mydata? @relation(fields: [mydata_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_parent_mydata")
-
-  @@index([mydata_id], map: "fk_parent_mydata")
-}
-
-model child {
-  id               Int       @id @default(autoincrement()) @db.UnsignedInt
-  gift_account_id  Int?     @unique @db.UnsignedInt // 증여 용도 입출금 통장 ID
-  parent_id        Int       @db.UnsignedInt
+  mydata_id Int?    @unique @db.UnsignedInt 
   born_date        DateTime  @db.Date
   name             String    @db.VarChar(50)
   profile_pic      String?   @db.VarChar(255)
   goal_money       BigInt?   @db.UnsignedBigInt // 증여 플랜에 따른 목표 금액
   monthly_money    BigInt?   @db.UnsignedBigInt // 증여 플랜에 따른 월 납입 금액
-  is_promise_fixed Boolean   @default(false) // 유기정기금 yes(1), no(0)
-  invest_type      invest_type @default(NOBASE) // 투자 성향 (NOBASE, DEFENSIVE, OFFENSIVE, DOPAMINE)
+  is_promise_fixed Boolean?   @default(false) // 유기정기금 yes(1), no(0)
+  invest_type      invest_type? @default(NOBASE) // 투자 성향 (NOBASE, DEFENSIVE, OFFENSIVE, DOPAMINE)
   identity_hash    String     @unique @db.VarChar(255)
   start_date       DateTime?  @db.Date       // 증여 플랜 시작날짜
   end_date         DateTime?  @db.Date       // 증여 플랜 종료날짜  
-  account          account[]  @relation("AllAccounts")
+  reading_list  read_auth[] @relation("ReaderRelation") // 권한 관계: 내가 누구의 정보를 볼 수 있는지
+  provided_to   read_auth[] @relation("ProviderRelation")// 권한 관계: 누가 나의 정보를 볼 수 있는지
+  account          account[]  
   alert            alert[]
-  chatlog          chatlog[]
-  parent           parent    @relation(fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_child_parent")
-  // 증여 통장 전용 관계 설정
-  gift_account     account? @relation("GiftAccount", fields: [gift_account_id], references: [id])
-
-  @@index([parent_id], map: "fk_child_parent")
-  
+  timeline timeline[]
 }
+
 
 model fund {
   id          Int              @id @default(autoincrement()) @db.UnsignedInt
@@ -65,38 +51,40 @@ model fund {
   image       String       @db.VarChar(255)
   account     account[]
 }
-
+/*
+유저 테이블에 자녀 추가하고 account랑 묶기, working account에 outer join으로 누가 얼마 줬는지 확인가능하도록 
+account - 하나은행 계좌만 취급
+*/
 model account {
   id                                         Int               @id @default(autoincrement()) @db.UnsignedInt
-  child_id                                   Int               @db.UnsignedInt
   fund_id                                    Int?              @db.UnsignedInt
+  user_id                                    Int               @db.UnsignedInt
   // 연금저축펀드계좌 표시. 일반펀드/예적금/ETF계좌는 null
   // sub_accounts가 연저펀에서 굴리는 펀드들임
   parent_account_id                          Int?              @db.UnsignedInt 
-  parent_account                             account?          @relation("ParentChild", fields: [parent_account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  sub_accounts                               account[]         @relation("ParentChild")
+  parent_account                             account?          @relation("ParentSub", fields: [parent_account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sub_accounts                               account[]         @relation("ParentSub")
   acc_num                                    String            @unique @db.VarChar(30)
   acc_type                                   account_acc_type
   opened_at                                  DateTime          @db.Date
   target_date                                DateTime?         @db.Date  // 가입 시 계산된 만기 예정일 (ETF는 null)
   closed_at                                  DateTime?         @db.Date
-  deposit                                    BigInt            @default(0) @db.UnsignedBigInt
+  deposit                                    BigInt            @default(0) @db.UnsignedBigInt //원금
   in_type                                    Boolean           @default(false) // 0=정기(false), 1=자유(true)
-  plus_rate                                  Decimal           @default(0.00) @db.Decimal(5, 2)
-  plus_money                                 BigInt            @default(0) @db.UnsignedBigInt
-  in_month                                   Int?              @db.TinyInt
+  plus_rate                                  Decimal           @default(0.00) @db.Decimal(5, 2) //수익률
+  plus_money                                 BigInt            @default(0) @db.UnsignedBigInt //수익금
+  in_month                                   Int?              @db.TinyInt //납입 개월 
   status                                     account_status    @default(ACTIVE) // Enum 추가
-  child                                      child             @relation("AllAccounts", fields: [child_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_child")
+  user                                     user             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_user")
   fund                                       fund?             @relation(fields: [fund_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_account_fund")
   history_history_source_account_idToaccount history[]         @relation("history_source_account_idToaccount")
   history_history_target_account_idToaccount history[]         @relation("history_target_account_idToaccount")
   auto_transfer_source                       auto_transfer[]   @relation("auto_transfer_source")
   auto_transfer_target                       auto_transfer[]   @relation("auto_transfer_target")
-  gift_child       child?   @relation("GiftAccount")
 
-  @@index([child_id], map: "fk_account_child")
+  @@index([user_id], map: "fk_account_user")
   @@index([fund_id], map: "fk_account_fund")
-  @@index([parent_account_id], map: "fk_account_parent")
+  @@index([parent_account_id], map: "fk_parent_pension")
 }
 
 model history {
@@ -126,20 +114,10 @@ model auto_transfer {
   @@index([target_account_id], map: "fk_auto_transfer_target")
 }
 
-model chatlog {
-  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  child_id   Int      @db.UnsignedInt
-  log        String   @db.VarChar(500)
-  created_at DateTime @default(now()) @db.DateTime(6)
-  is_sent    Boolean  @default(false)
-  child      child    @relation(fields: [child_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_chatlog_child")
-
-  @@index([child_id], map: "fk_chatlog_child")
-}
-
+//안씀
 model alert {
   id          Int      @id @default(autoincrement()) @db.UnsignedInt
-  child_id    Int      @db.UnsignedInt
+  user_id    Int      @db.UnsignedInt
   type        String   @db.VarChar(25)
   title       String   @db.VarChar(25)
   description String?  @db.Text
@@ -148,20 +126,36 @@ model alert {
   priority    Int      @default(0) @db.UnsignedTinyInt
   created_at  DateTime @default(now()) @db.DateTime(6)
   screen      String   @db.VarChar(50)
-  child       child    @relation(fields: [child_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_alert_child")
+  user       user    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_alert_user")
 
-  @@index([child_id], map: "fk_alert_child")
+  @@index([user_id], map: "fk_alert_user")
 }
 
 model timeline {
   id          Int      @id @default(autoincrement()) @db.UnsignedInt
-  child_id    Int      @db.UnsignedInt
+  user_id    Int      @db.UnsignedInt
   date        DateTime @default(now()) @db.DateTime(6)
   type        String   @db.VarChar(20)
   description String?  @db.VarChar(50)
   memo        String?  @db.VarChar(50)
+
+  user       user    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  @@index([user_id], map: "fk_timeline_user")
 }
 
+//아이앞으로에서 누구 프로필을 볼건지, speed계좌 조회와는 별도의 테이블임 
+model read_auth {
+  id Int @id @default(autoincrement()) @db.UnsignedInt
+  reader_id Int @db.UnsignedInt
+  provider_id Int 
+
+  reader user @relation("ReaderRelation", fields: [reader_id], references: [id], onDelete: Cascade)
+  provider user @relation("ProviderRelation", fields: [provider_id], references: [id], onDelete: Cascade)
+ 
+  @@index([reader_id], map: "fk_read_auth_reader")
+  @@index([provider_id], map: "fk_read_auth_provider")
+  @@unique([reader_id, provider_id])
+}
 enum fund_danger {
   LOW
   MID
@@ -190,7 +184,8 @@ enum fund_saving_type {
 }
 
 enum account_acc_type {
-  DEPOSIT
+  GIFT_DEPOSIT //증여용 통장
+  DEPOSIT //입출금 통장
   FUND
   PENSION
 }
