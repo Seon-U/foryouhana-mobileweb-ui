@@ -1,11 +1,6 @@
 //마스코트 + 메시지
 //뱃지
 
-import ChildAccountInfoCard from '@/components/home/ChildAccountInfoCard';
-import ChildFundSection from '@/components/home/ChildFundSection';
-import GiftStatusSection from '@/components/home/GiftStatusSection';
-import GiftTaxSection from '@/components/home/GiftTaxSection';
-import HomeClientWrapper from '@/components/home/HomeClientWrapper';
 import { prisma } from '@/lib/prisma';
 
 type Props = {

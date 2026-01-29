@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronRight, Plus } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { MyFundCard } from '@/components/cmm/MyFundCard';
 import AvgAccCard from '../cmm/AvgAccCard';
