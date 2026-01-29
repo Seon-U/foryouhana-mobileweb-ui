@@ -70,9 +70,11 @@ export function MyFundDetailCard({
       {/* 제목 */}
       <div className={cn('flex justify-between font-hana-regular text-[15px]')}>
         {title}
-        <Link href={depositHref} className="font-hana-light">
-          입금하기
-        </Link>
+        {variant === 'active' ? (
+          <Link href={depositHref} className="font-hana-light">
+            입금하기
+          </Link>
+        ) : null}
       </div>
 
       {/* 태그 */}
