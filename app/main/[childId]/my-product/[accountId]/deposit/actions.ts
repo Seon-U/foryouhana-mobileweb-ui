@@ -91,7 +91,7 @@ export async function processDeposit(
       // 2-7. timeline 레코드 생성
       await tx.timeline.create({
         data: {
-          child_id: childId,
+          user_id: childId,
           type: '증여 입금',
           description: `${formatWon(amount)}원 입금 완료!`,
           date: new Date(),
@@ -101,7 +101,7 @@ export async function processDeposit(
       // 2-8. alert 생성 (GIFT_COMPLETE)
       await tx.alert.create({
         data: {
-          child_id: childId,
+          user_id: childId,
           type: 'GIFT_COMPLETE',
           title: '이번 달 증여가 완료됐어요!',
           description: `아이 계좌로 ${formatWon(amount)}원이 입금되었어요.`,
