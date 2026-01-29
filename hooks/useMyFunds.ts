@@ -25,14 +25,26 @@ type ApiResult = {
   canceledCards: FundCardItem[];
 };
 
+function isValidId(n: number) {
+  return Number.isFinite(n) && n > 0;
+}
+
 export function useMyFunds(childId: number) {
   const [activeCards, setActiveCards] = useState<FundCardItem[]>([]);
   const [canceledCards, setCanceledCards] = useState<FundCardItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
+    if (!isValidId(childId)) {
+      setActiveCards([]);
+      setCanceledCards([]);
+      setIsLoading(false);
+      setIsError(false);
+      return;
+    }
+
+    const controller = new AbortController();
 
     async function run() {
       setIsLoading(true);
@@ -41,6 +53,7 @@ export function useMyFunds(childId: number) {
       try {
         const res = await fetch(`/api/my/funds?childId=${childId}`, {
           method: 'GET',
+          signal: controller.signal,
         });
 
         if (!res.ok) {
@@ -49,29 +62,28 @@ export function useMyFunds(childId: number) {
 
         const data = (await res.json()) as ApiResult;
 
-        if (mounted) {
-          setActiveCards(data.activeCards);
-          setCanceledCards(data.canceledCards);
-        }
+        setActiveCards(Array.isArray(data.activeCards) ? data.activeCards : []);
+        setCanceledCards(
+          Array.isArray(data.canceledCards) ? data.canceledCards : [],
+        );
       } catch (e) {
-        console.error(e);
+        if ((e as { name?: string }).name === 'AbortError') {
+          return;
+        }
 
-        if (mounted) {
-          setActiveCards([]);
-          setCanceledCards([]);
-          setIsError(true);
-        }
+        console.error(e);
+        setActiveCards([]);
+        setCanceledCards([]);
+        setIsError(true);
       } finally {
-        if (mounted) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       }
     }
 
     run();
 
     return () => {
-      mounted = false;
+      controller.abort();
     };
   }, [childId]);
 
