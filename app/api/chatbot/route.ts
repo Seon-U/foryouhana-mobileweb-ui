@@ -131,6 +131,7 @@ ${userInput}
       ? AccountAccType.PENSION
       : AccountAccType.DEPOSIT;
 
+    //유기정기금은 정기적립식이어야 하므로, AI 응답이 달라도 `true`로 강제합니다.
     const inType = data.useYugi ? true : data.isRegular;
 
     // 6. 프론트로 결과 반환
