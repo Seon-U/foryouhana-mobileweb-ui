@@ -66,7 +66,6 @@ export const saveEditPlan = async ({ childId, form }: Prop) => {
     }
     monthlyMoney = BigInt(amount);
     goalMoney = totalAmount;
-    console.log(start, end);
     startDate = yearMonthToDateWithTodayDay(start);
     endDate = yearMonthToDateWithTodayDay(end);
   }
