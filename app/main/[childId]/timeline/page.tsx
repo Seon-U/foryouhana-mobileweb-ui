@@ -29,28 +29,51 @@ export default async function TimelinePage({
     return redirect('/main' as Route);
   }
 
-  // 1. 데이터 병렬 조회
-  const [currentChild, allChildren, timelines] = await Promise.all([
-    prisma.child.findUnique({ where: { id: childIdInt } }),
-    prisma.child.findMany({ orderBy: { born_date: 'asc' } }),
+  const LOGGED_IN_PARENT_ID = 1;
+
+  const [targetChild, myChildren, timelines] = await Promise.all([
+    // 현재 보고 있는 자녀 정보 조회
+    prisma.user.findFirst({
+      where: {
+        id: childIdInt,
+        provided_to: {
+          some: {
+            reader_id: LOGGED_IN_PARENT_ID,
+          },
+        },
+      },
+    }),
+
+    // 토글 바에 표시할 "내 자녀들" 목록 조회
+    prisma.user.findMany({
+      where: {
+        provided_to: {
+          some: {
+            reader_id: LOGGED_IN_PARENT_ID,
+          },
+        },
+      },
+      orderBy: { born_date: 'asc' },
+    }),
+
     prisma.timeline.findMany({
-      where: { child_id: childIdInt },
+      where: {
+        user_id: childIdInt,
+      },
       orderBy: { date: 'desc' },
     }),
   ]);
 
-  // 자녀 정보가 없을 경우 리다이렉트
-  if (!currentChild) {
+  if (!targetChild) {
+    console.log('⛔ 접근 권한이 없거나 존재하지 않는 유저입니다.');
     return redirect('/main' as Route);
   }
 
-  // 2. 자녀 토글용 데이터 변환
-  const kidProfiles: KidProfile[] = allChildren.map((child) => ({
+  const kidProfiles: KidProfile[] = myChildren.map((child) => ({
     id: child.id,
     avatarUrl: child.profile_pic || '',
   }));
 
-  // 3. UI 데이터 변환
   const timelineItems = timelines.map((item) => {
     const isGift = item.type.includes('입금') || item.type.includes('선물');
 
@@ -67,38 +90,37 @@ export default async function TimelinePage({
     };
   });
 
-  // 요약 정보 계산
   const depositCount = timelines.filter((t) => t.type.includes('입금')).length;
 
   return (
-    <main className="min-h-screen bg-white font-hana-regular">
+    // 1. 가장 바깥쪽 main에 'relative'와 'min-h-screen'을 적용하여 기준점으로 만듭니다.
+    <main className="relative min-h-screen bg-white font-hana-regular">
       {/* 고정 상단 헤더 */}
       <Header content="타임라인" />
 
-      {/* 컨텐츠 영역: pb-32를 통해 하단 네비바에 가려지는 부분을 방지합니다. */}
-      <div className="p-6 pb-32">
+      {/* 2. 컨텐츠 영역: 하단바 높이만큼(약 80px) 패딩을 주어 내용이 가려지지 않게 합니다. */}
+      <div className="p-6 pb-[80px]">
+        {/* 상단 자녀 선택 토글 */}
         <TimelineChildToggle kids={kidProfiles} selectedKidId={childIdInt} />
 
+        {/* 요약 카드 */}
         <TimelineSummary monthsPassed={0} depositCount={depositCount} />
 
+        {/* 타임라인 리스트 */}
         <TimelineList
           items={timelineItems}
-          childName={currentChild.name}
-          bornDate={currentChild.born_date}
+          childName={targetChild.name}
+          bornDate={targetChild.born_date}
         />
 
         <TimelineFooter />
       </div>
 
-      {/* 플로팅 하단 네비게이션 
-        - fixed: 뷰포트 고정
-        - bottom-0: 바닥 밀착
-        - left-1/2 & -translate-x-1/2: 중앙 정렬
-        - z-50: 컨텐츠보다 항상 위
-      */}
-      <div className="-translate-x-1/2 fixed bottom-0 left-1/2 z-50">
-        <BottomNavBar />
-      </div>
+      {/* 3. 하단 네비게이션: 복잡한 위치 설정 제거하고 컴포넌트 자체 속성 사용 */}
+
+      {/* 가이드대로 부모가 relative이므로, BottomNavBar 내부의 fixed/absolute가 이 영역 기준(또는 뷰포트)으로 잡히게 됩니다. */}
+
+      <BottomNavBar />
     </main>
   );
 }
