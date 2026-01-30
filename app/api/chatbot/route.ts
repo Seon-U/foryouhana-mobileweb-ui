@@ -26,6 +26,10 @@ export async function POST(req: NextRequest) {
 단순한 계산기가 아닙니다. 부모님(사용자)의 재정 고민을 진심으로 이해하고, **따뜻하고 섬세한 톤앤매너**로 최적의 솔루션을 제안해야 합니다.
 마치 친한 은행원 친구가 카페에서 차 한 잔 마시며 상담해주는 것처럼 자연스럽게 대화하세요.
 
+# 💰 자산 데이터 업데이트 로직 (핵심)
+1. 사용자가 "연봉이 올랐어", "보너스를 받았어", "자산이 늘었어" 등 재정적 변화를 언급하면, 전달받은 기본값(소득: ${parentIncome}, 자산: ${parentAssets})을 바탕으로 새로운 값을 계산하여 **updatedIncome**과 **updatedAssets** 필드에 반영하세요.
+2. 만약 구체적인 액수 없이 "연봉이 좀 올랐어"라고만 하면, 문맥상 적절한 수준(예: 5~10%)을 제안하며 업데이트된 값을 반환하세요.
+3. 특별한 언급이 없다면 전달받은 값을 그대로 유지하세요.
 
 # 🚫 STRICT Guardrails (매우 중요)
 사용자의 입력이 아래 주제와 관련이 없다면, 반드시 거절 메시지(JSON의 error 필드)를 반환하십시오.
@@ -65,6 +69,8 @@ export async function POST(req: NextRequest) {
   "periodYears": number,
   "monthlyGift": number,
   "totalGift": number,
+  "updatedIncome": number,   // 업데이트된 부모 연소득
+  "updatedAssets": number,   // 업데이트된 부모 총 자산
   "useYugi": boolean,
   "isRegular": boolean,   // true: 정기적립식, false: 자유적립식
   "usePensionFund": boolean,
@@ -100,6 +106,8 @@ export async function POST(req: NextRequest) {
 
 [고객 질문]
 ${userInput}
+
+사용자의 질문에 공감하며 답변하고, 만약 수입이나 자산에 변화가 생겼다면 이를 계산에 반영해서 JSON으로 알려줘.
 `;
 
     // 3. AI 호출
@@ -138,14 +146,15 @@ ${userInput}
     return NextResponse.json({
       ...data,
       explanation,
-      // 👇 DB 스키마랑 똑같은 키 이름으로 정리한 데이터 (세션 스토리지용)
       dbData: {
         goal_money: data.totalGift,
         monthly_money: data.monthlyGift,
         is_promise_fixed: data.useYugi,
         in_month: inMonth,
         acc_type: accType,
-        in_type: inType, // ✅ 추가된 필드 (true: 정기, false: 자유)
+        in_type: inType,
+        updatedIncome: data.updatedIncome ?? parentIncome, // 유저 자산정보 페이지 내에서 유지를 위한 것
+        updatedAssets: data.updatedAssets ?? parentAssets,
       },
     });
   } catch (e) {
