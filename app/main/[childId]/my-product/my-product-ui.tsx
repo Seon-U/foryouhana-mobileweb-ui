@@ -166,6 +166,7 @@ export function MyProductUi({ childId }: Props) {
                 <div className="space-y-3">
                   {activeFiltered.map((card) => (
                     <MyFundDetailCard
+                      accountId={card.id}
                       key={card.id}
                       variant="active"
                       title={card.title}
@@ -189,6 +190,7 @@ export function MyProductUi({ childId }: Props) {
             <div className="space-y-3">
               {canceledCards.map((card) => (
                 <MyFundDetailCard
+                  accountId={card.id}
                   key={card.id}
                   variant="canceled"
                   title={card.title}

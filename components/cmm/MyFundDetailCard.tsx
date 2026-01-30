@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 type Variant = 'active' | 'canceled';
 
 type Props = {
+  accountId: number | string;
   variant?: Variant;
   title: string;
   tags?: [string?, string?, string?];
@@ -39,6 +40,7 @@ function getTagClassName(variant: Variant) {
 }
 
 export function MyFundDetailCard({
+  accountId,
   variant = 'active',
   title,
   tags = [],
@@ -51,9 +53,8 @@ export function MyFundDetailCard({
     (t) => typeof t === 'string' && t.trim().length > 0,
   );
 
-  const params = useParams<{ childId: string; accountId: string }>();
-  const childId = params.childId;
-  const accountId = params.accountId;
+  const params = useParams<{ childId: string }>();
+  const childId = String(params.childId);
 
   const depositHref =
     `/main/${childId}/my-product/${accountId}/deposit` as const;
@@ -71,7 +72,10 @@ export function MyFundDetailCard({
       <div className={cn('flex justify-between font-hana-regular text-[15px]')}>
         {title}
         {variant === 'active' ? (
-          <Link href={depositHref} className="font-hana-light">
+          <Link
+            href={depositHref}
+            className="font-hana-light hover:text-hana-main"
+          >
             입금하기
           </Link>
         ) : null}
