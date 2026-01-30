@@ -43,12 +43,20 @@ export default async function PlanEdit({ params }: PageProps) {
   });
   if (child === null) notFound();
 
+  const today = new Date();
+
+  // ✅ 계산용 Date (로컬 기준, 월 시작일)
+  // const currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  const currentDateString = `${today.getFullYear()}-${String(
+    today.getMonth() + 1,
+  ).padStart(2, '0')}-01`;
   const { start_date: startDate, end_date: endDate } = child;
 
+  const endDateString = endDate ? endDate.toISOString().split('T')[0] : '';
   const startDateString = startDate
     ? startDate.toISOString().split('T')[0]
     : '';
-  const endDateString = endDate ? endDate.toISOString().split('T')[0] : '';
 
   const {
     is_promise_fixed: isFixedGift,
@@ -58,12 +66,30 @@ export default async function PlanEdit({ params }: PageProps) {
 
   if (isFixedGift === null) notFound();
 
+  const period = getGiftPeriodMonths(startDate, endDate);
+
   const method =
     monthlyMoney !== null && goalMoney !== null
       ? GIFT_METHOD.REGULAR
       : GIFT_METHOD.FLEXIBLE;
 
-  const period = getGiftPeriodMonths(startDate, endDate);
+  const getTotalDepositByChildId = async (childId: number) => {
+    const result = await prisma.account.aggregate({
+      where: {
+        user_id: childId,
+        acc_type: {
+          not: account_acc_type.DEPOSIT,
+        },
+      },
+      _sum: {
+        deposit: true,
+      },
+    });
+
+    return result._sum.deposit ?? BigInt(0);
+  };
+
+  const totalDeposit = await getTotalDepositByChildId(childIdNumber);
 
   return (
     <div className="flex flex-col">
@@ -76,8 +102,10 @@ export default async function PlanEdit({ params }: PageProps) {
         isPension={isPension}
         onSave={saveEditPlan}
         childId={childIdNumber}
+        currentDate={currentDateString}
         startDate={startDateString}
         endDate={endDateString}
+        totalDeposit={totalDeposit}
       />
     </div>
   );

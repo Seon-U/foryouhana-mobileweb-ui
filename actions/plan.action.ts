@@ -15,21 +15,55 @@ type Prop = {
     fixed: boolean;
     amount: number;
     period: number;
+    start: string | null;
+    end: string | null;
     pension: boolean;
+    prevAmount: number;
+    prevPeriod: number;
     method: GiftMethod;
+    totalDeposit: bigint;
   };
 };
 
 export const saveEditPlan = async ({ childId, form }: Prop) => {
-  const { fixed, amount, period, method } = form;
+  const {
+    fixed,
+    amount,
+    period,
+    method,
+    start,
+    end,
+    prevAmount,
+    prevPeriod,
+    totalDeposit,
+  } = form;
+  const baseTotal = BigInt((period ?? 0) * (amount ?? 0)) + totalDeposit;
+
+  const prevPlanTotal =
+    prevAmount !== null && prevPeriod !== null
+      ? BigInt(prevAmount * prevPeriod)
+      : 0n;
+  const totalAmount = baseTotal + prevPlanTotal;
+
   let monthlyMoney: bigint | null;
   let goalMoney: bigint | null;
+  let startDate: Date | null;
+  let endDate: Date | null;
+
   if (method === GIFT_METHOD.FLEXIBLE) {
     monthlyMoney = null;
     goalMoney = null;
+    startDate = null;
+    endDate = null;
   } else {
+    if (start === null || end === null) {
+      alert('올바른 날짜를 선택해주세요.');
+      return;
+    }
     monthlyMoney = BigInt(amount);
-    goalMoney = BigInt(amount) * BigInt(period);
+    goalMoney = totalAmount;
+    startDate = null;
+    endDate = null;
   }
 
   await prisma.user.update({
@@ -38,7 +72,8 @@ export const saveEditPlan = async ({ childId, form }: Prop) => {
       is_promise_fixed: fixed,
       monthly_money: monthlyMoney,
       goal_money: goalMoney,
-      // TODO start date 랑 end date 추가
+      start_date: startDate,
+      end_date: endDate,
     },
   });
 };

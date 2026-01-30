@@ -1,7 +1,7 @@
 'use client';
 import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CustomButton } from '@/components/cmm/CustomButton';
 import {
   BLOCK_STATUS,
@@ -11,6 +11,7 @@ import {
   YUGI_STATUS,
   type YugiStatus,
 } from '@/constants/gift';
+import { getMonthDiff } from '@/lib/utils';
 import PensionSelection from './PensionSelection';
 import PlanSection from './PlanSection';
 import YugiSection from './YugiSection';
@@ -23,15 +24,22 @@ type Props = {
   monthlyMoney: number;
   childId: number;
   startDate: string;
+  currentDate: string;
   endDate: string;
+  totalDeposit: bigint;
   onSave: (params: {
     childId: number;
     form: {
       fixed: boolean;
       amount: number;
       period: number;
+      prevAmount: number;
+      prevPeriod: number;
       pension: boolean;
       method: GiftMethod;
+      start: string | null;
+      end: string | null;
+      totalDeposit: bigint;
     };
   }) => Promise<void>;
 };
@@ -43,8 +51,9 @@ export default function MainSection({
   period,
   isFixedGift,
   monthlyMoney,
-  startDate,
   endDate,
+  totalDeposit,
+  currentDate,
   onSave,
 }: Props) {
   const [giftMethod, setGiftMethod] = useState<GiftMethod>(
@@ -59,8 +68,15 @@ export default function MainSection({
     Number(monthlyMoney),
   );
   const [newPeriod, setNewPeriod] = useState<number | null>(period);
-  const [newStart, setNewStart] = useState<string | null>(startDate);
+  const [newStart, setNewStart] = useState<string | null>(currentDate);
   const [newEnd, setNewEnd] = useState<string | null>(endDate);
+
+  useEffect(() => {
+    if (newStart && newEnd) {
+      const month = getMonthDiff(newStart, newEnd);
+      setNewPeriod(month);
+    }
+  }, [newStart, newEnd]);
 
   return (
     <div>
@@ -92,6 +108,7 @@ export default function MainSection({
             onChangeEnd={setNewEnd}
             onAmountChange={setNewAmount}
             onPeriodChange={setNewPeriod}
+            totalDeposit={totalDeposit}
           />
           <hr className="my-4 border-hana-gray-400" />
           <YugiSection
@@ -120,8 +137,13 @@ export default function MainSection({
                 fixed,
                 amount: newAmount ?? monthlyMoney,
                 period: newPeriod ?? period,
+                start: newStart,
+                end: newEnd,
                 pension: newPension,
                 method: giftMethod,
+                totalDeposit: totalDeposit,
+                prevAmount: monthlyMoney,
+                prevPeriod: period,
               },
             });
 
@@ -129,7 +151,7 @@ export default function MainSection({
               router.push(`/main/${childId}/product-list` as Route);
               console.log(childId);
             } else {
-              router.back();
+              router.push(`/main/${childId}/home`);
             }
           }}
           disabled={blocked === BLOCK_STATUS.BLOCK}

@@ -20,6 +20,7 @@ type Props = {
   blockStatus: BlockStatus;
   newStart: string | null;
   newEnd: string | null;
+  totalDeposit: bigint;
   onMethodChange: (v: GiftMethod) => void;
   onAmountChange: (v: number | null) => void;
   onPeriodChange: (v: number | null) => void;
@@ -38,6 +39,7 @@ export default function PlanSection({
   blockStatus,
   newStart,
   newEnd,
+  totalDeposit,
   onChangeStart,
   onChangeEnd,
   onPeriodChange,
@@ -55,6 +57,9 @@ export default function PlanSection({
           period={
             (blockStatus === BLOCK_STATUS.REVERT ? period : newPeriod) ?? 0
           }
+          prevAmount={amount}
+          prevPeriod={period}
+          totalDeposit={totalDeposit}
           method={method}
           blockStatus={blockStatus}
           newStart={newStart ?? ''}
@@ -67,6 +72,8 @@ export default function PlanSection({
         />
       ) : (
         <GeneralPlanSection
+          prevAmount={amount}
+          prevPeriod={period}
           yugi={yugi}
           blockStatus={blockStatus}
           isRegular={method === GIFT_METHOD.REGULAR}
@@ -76,6 +83,7 @@ export default function PlanSection({
           newEnd={newEnd ?? ''}
           onChangeStart={onChangeStart}
           onChangeEnd={onChangeEnd}
+          totalDeposit={totalDeposit}
           amount={
             (blockStatus === BLOCK_STATUS.REVERT ? amount : newAmount) ?? 0
           }

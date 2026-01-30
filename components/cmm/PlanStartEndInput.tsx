@@ -28,9 +28,9 @@ export default function PlanStartEndInput({
   return (
     <div className="flex justify-between pt-4">
       <div>
-        <TitlePlanSelect title="시작 날짜" />
+        <TitlePlanSelect title="변경 플랜 시작 날짜" />
         <input
-          type="date"
+          type="month"
           disabled={startDisable}
           value={startDate ?? ''}
           min={new Date().toISOString().split('T')[0]}
@@ -41,22 +41,11 @@ export default function PlanStartEndInput({
               : 'h-[42px] w-[155px] rounded-md bg-hana-light-green px-2 font-hana-regular'
           }
         />
-        {/* <InputMonth
-          disabled={disabled}
-          value={period ?? undefined}
-          unit="개월"
-          className={
-            disabled
-              ? 'h-[42px] w-[155px] bg-hana-gray-300 font-hana-regular'
-              : 'h-[42px] w-[155px] bg-hana-light-green font-hana-regular'
-          }
-          onChange={(v) => onChangePeriod(v ?? 0)}
-        /> */}
       </div>
       <div>
-        <TitlePlanSelect title="종료 날짜" />
+        <TitlePlanSelect title="변경 플랜 종료 날짜" />
         <input
-          type="date"
+          type="month"
           disabled={endDisable}
           value={endDate ?? ''}
           min={new Date().toISOString().split('T')[0]}
