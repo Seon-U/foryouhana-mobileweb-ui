@@ -1,10 +1,6 @@
-import { notFound } from 'next/navigation';
-import { saveEditPlan } from '@/actions/plan.action';
+import { getPrevPlanFromDB, saveEditPlan } from '@/actions/plan.action';
 import Header from '@/components/cmm/Header';
-import { GIFT_METHOD } from '@/constants/gift';
-import { account_acc_type } from '@/lib/generated/prisma/enums';
-import { prisma } from '@/lib/prisma';
-import { getGiftPeriodMonths } from '@/lib/utils';
+import type { GiftMethod } from '@/constants/gift';
 import MainSection from './MainSection';
 
 /**
@@ -21,75 +17,33 @@ type PageProps = {
   };
 };
 
+export type ReloadProps = {
+  isPension: boolean;
+  currentDateString: string;
+  endDateString: string;
+  startDateString: string;
+  isFixedGift: boolean;
+  monthlyMoney: number;
+  period: number | null;
+  method: GiftMethod;
+  totalDeposit: bigint;
+};
+
 export default async function PlanEdit({ params }: PageProps) {
   const { childId } = await params;
   const childIdNumber = Number(childId);
 
-  //연금저축펀드 사용 여부 불러오기
-  const account = await prisma.account.findFirst({
-    where: {
-      user_id: childIdNumber,
-      acc_type: account_acc_type.PENSION,
-    },
-  });
-
-  const isPension = !!account;
-
-  //유기정기금 사용 여부, 증여 방식, 기간, 월 증여액  불러오기
-  const child = await prisma.user.findUnique({
-    where: {
-      id: childIdNumber,
-    },
-  });
-  if (child === null) notFound();
-
-  const today = new Date();
-
-  // ✅ 계산용 Date (로컬 기준, 월 시작일)
-  // const currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
-
-  const currentDateString = `${today.getFullYear()}-${String(
-    today.getMonth() + 1,
-  ).padStart(2, '0')}-01`;
-  const { start_date: startDate, end_date: endDate } = child;
-
-  const endDateString = endDate ? endDate.toISOString().split('T')[0] : '';
-  const startDateString = startDate
-    ? startDate.toISOString().split('T')[0]
-    : '';
-
   const {
-    is_promise_fixed: isFixedGift,
-    monthly_money: monthlyMoney,
-    goal_money: goalMoney,
-  } = child;
-
-  if (isFixedGift === null) notFound();
-
-  const period = getGiftPeriodMonths(startDate, endDate);
-
-  const method =
-    monthlyMoney !== null && goalMoney !== null
-      ? GIFT_METHOD.REGULAR
-      : GIFT_METHOD.FLEXIBLE;
-
-  const getTotalDepositByChildId = async (childId: number) => {
-    const result = await prisma.account.aggregate({
-      where: {
-        user_id: childId,
-        acc_type: {
-          not: account_acc_type.DEPOSIT,
-        },
-      },
-      _sum: {
-        deposit: true,
-      },
-    });
-
-    return result._sum.deposit ?? BigInt(0);
-  };
-
-  const totalDeposit = await getTotalDepositByChildId(childIdNumber);
+    isPension,
+    currentDateString,
+    endDateString,
+    startDateString,
+    isFixedGift,
+    monthlyMoney,
+    period,
+    method,
+    totalDeposit,
+  } = await getPrevPlanFromDB({ childId: childIdNumber });
 
   return (
     <div className="flex flex-col">

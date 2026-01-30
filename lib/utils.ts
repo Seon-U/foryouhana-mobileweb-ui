@@ -197,3 +197,35 @@ export const getMonthDiff = (start: string, end: string) => {
 
   return Math.max(months, 0);
 };
+
+export function yearMonthToDateWithTodayDay(
+  yearMonth: string,
+  today = new Date(),
+) {
+  const [year, month] = yearMonth.split('-').map(Number);
+
+  const day = today.getDate();
+
+  // 해당 월의 마지막 날
+  const lastDayOfMonth = new Date(year, month, 0).getDate();
+
+  const safeDay = Math.min(day, lastDayOfMonth);
+
+  return new Date(year, month - 1, safeDay);
+}
+
+export function addMonthsToYearMonth(
+  yearMonth: string,
+  addMonths: number,
+): string {
+  const [yearStr, monthStr] = yearMonth.split('-');
+  const year = Number(yearStr);
+  const month = Number(monthStr); // 1 ~ 12
+
+  const totalMonths = year * 12 + (month - 1) + addMonths;
+
+  const newYear = Math.floor(totalMonths / 12);
+  const newMonth = (totalMonths % 12) + 1;
+
+  return `${newYear}-${String(newMonth).padStart(2, '0')}`;
+}

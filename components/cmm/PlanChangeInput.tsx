@@ -18,6 +18,7 @@ export default function PlanChangeInput({
   onChangePeriod,
   handleChangeEnd,
 }: Props) {
+  const endMonth = endDate?.slice(0, 7) ?? '';
   return (
     <div className="flex justify-between pt-4">
       <div>
@@ -39,7 +40,7 @@ export default function PlanChangeInput({
         <input
           type="month"
           disabled={disabledEnd}
-          value={endDate ?? ''}
+          value={endMonth ?? ''}
           min={new Date().toISOString().split('T')[0]}
           onChange={(e) => handleChangeEnd(e.target.value)}
           className={

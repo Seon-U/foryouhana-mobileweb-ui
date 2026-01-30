@@ -58,7 +58,6 @@ export default function FixedPlanSection({
     prevAmount !== null && prevPeriod !== null
       ? BigInt(prevAmount * prevPeriod)
       : 0n;
-
   const totalAmount = baseTotal + prevPlanTotal;
   return (
     <div>
