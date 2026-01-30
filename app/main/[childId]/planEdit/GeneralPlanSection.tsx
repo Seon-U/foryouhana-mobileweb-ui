@@ -39,13 +39,11 @@ export default function GeneralPlanSection({
   onChange,
   period,
   amount,
-  newStart,
   newEnd,
   prevAmount,
   prevPeriod,
   totalDeposit,
   onChangeEnd,
-  onChangeStart,
   onChangeAmount,
   onChangePeriod,
 }: Props) {
