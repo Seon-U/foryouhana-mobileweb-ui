@@ -88,10 +88,11 @@ export default function MainSection({
       if (!raw) return;
 
       const parsed = JSON.parse(raw) as DraftPlanPayload;
+      console.log(parsed);
       if (parsed.isChatbot) {
         setDraft(parsed);
         setGiftMethod(
-          parsed.plan.in_type ? GIFT_METHOD.FLEXIBLE : GIFT_METHOD.REGULAR,
+          parsed.plan.in_type ? GIFT_METHOD.REGULAR : GIFT_METHOD.FLEXIBLE,
         );
         setFixed(parsed.plan.is_promise_fixed);
         setNewPension(parsed.plan.acc_type === 'PENSION');

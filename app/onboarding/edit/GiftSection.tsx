@@ -1,6 +1,7 @@
 import { InfoIcon } from 'lucide-react';
 import { useState } from 'react';
 import { InputAmount, InputMonth } from '@/components/cmm/InputDayAmount';
+import TitlePlanSelect from '@/components/cmm/TitlePlanSelect';
 import {
   calculateGiftBenefit,
   formatWonDetail,
@@ -44,8 +45,9 @@ export default function GiftSection({
   return (
     <div className="pt-2">
       <div className="flex items-center gap-1 pb-2">
-        <h2 className="font-hana-light text-xs">유기정기금</h2>
-        <InfoIcon className="h-4 w-4 text-hana-gray-400" />
+        <TitlePlanSelect title="유기정기금" />
+        {/* <h2 className="font-hana-light text-xs">유기정기금</h2>
+        <InfoIcon className="h-4 w-4 text-hana-gray-400" /> */}
         <h2 className="text-[12px]">
           약{' '}
           {formatWonDetail(
