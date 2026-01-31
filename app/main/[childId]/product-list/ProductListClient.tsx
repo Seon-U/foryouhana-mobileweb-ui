@@ -71,10 +71,6 @@ export function ProductListClient({ type, items }: Props) {
           전체 <span className="text-hana-main">{items.length}</span>
         </div>
 
-        <div className="pt-2 text-right font-hana-main text-[13px] text-hana-main">
-          보유중 · {items.length}
-        </div>
-
         <div className="space-y-3 pt-3">
           {items.map((it) => (
             <Link
