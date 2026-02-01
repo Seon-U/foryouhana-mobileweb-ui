@@ -83,6 +83,5 @@ stories/              # Storybook 스토리
 - Tailwind v4를 사용하므로 PostCSS 설정(`postcss.config.mjs`)과 `app/globals.css`가 함께 필요합니다.
 - `prisma/migrations`가 비어 있어도 `db:push`로 스키마를 즉시 동기화할 수 있습니다(필요 시 이후 마이그레이션 생성).
 
-## 기여 크레딧 (주석 기반, 중복 제거)
-- 권순범, minyoung, typeYu, seonukim, 이정수, 승빈
+## 기여 크레딧
 - 팀명/서비스: F1 · 아이앞으로 (권순범, 김선우, 신호림, 유민영, 유지예, 유하임, 이승빈, 이정수)
