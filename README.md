@@ -60,7 +60,7 @@ stories/              # Storybook 스토리
 ```
 
 ## 핵심 기능 개요
-- **타임라인**: `app/main/[childId]/timeline/page.tsx`에서 자녀별 타임라인을 서버에서 조회하여 카드 리스트로 렌더링. 메모 아이콘 클릭 시 `TimelineMsg` 모달에서 입력 → `saveTimelineMessage`로 `timeline.memo` 컬럼을 업데이트. 만 19세 이상 자녀는 `TimelineList` 내부 로직으로 5초 후 성인 전용 안내 모달(`FinancialHistoryGiftModal`)이 표시됨.
+- **타임라인**: `app/main/[childId]/timeline/page.tsx`에서 자녀별 타임라인을 서버에서 조회하여 카드 리스트로 렌더링. 
 - **투자/계좌 데이터**: `prisma/seed.ts`가 부모/자녀(김부모, 김첫째 2018생, 김둘째 2000생), 계좌, 자동이체, 히스토리, 펀드 정보를 생성. 포트폴리오·플랜 편집 UI는 `app/main/[childId]/planEdit/*`에 배치.
 - **홈/대시보드**: `app/main/[childId]/home`에서 자녀 프로필 토글, 잔액·수익률, 추천 상품 등을 표시.
 - **Storybook**: UI 컴포넌트 단위 테스트/프리뷰를 위해 `stories/`와 `.storybook/` 설정 제공.
