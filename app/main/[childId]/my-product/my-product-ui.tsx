@@ -162,30 +162,21 @@ export function MyProductUi({ childId }: Props) {
                 </div>
 
                 <div className="space-y-3">
-                  {activeFiltered.map((card) => {
-                    const detailHref =
-                      `/main/${childId}/product-list/${card.fundId}` as Route;
-
-                    return (
-                      <Link
+                  <div className="space-y-3">
+                    {activeFiltered.map((card) => (
+                      <MyFundDetailCard
                         key={`${card.id}-${card.fundId}`}
-                        href={detailHref}
-                        className="block"
-                        aria-label="펀드 상품 상세로 이동"
-                      >
-                        <MyFundDetailCard
-                          accountId={card.id}
-                          fundId={card.fundId}
-                          variant="active"
-                          title={card.title}
-                          tags={card.tags}
-                          totalAmountWonText={card.totalAmountWonText}
-                          profitRateText={card.profitRateText}
-                          monthlyPayWonText={card.monthlyPayWonText}
-                        />
-                      </Link>
-                    );
-                  })}
+                        accountId={card.id}
+                        fundId={card.fundId}
+                        variant="active"
+                        title={card.title}
+                        tags={card.tags}
+                        totalAmountWonText={card.totalAmountWonText}
+                        profitRateText={card.profitRateText}
+                        monthlyPayWonText={card.monthlyPayWonText}
+                      />
+                    ))}
+                  </div>
                 </div>
               </>
             ) : (
@@ -197,30 +188,21 @@ export function MyProductUi({ childId }: Props) {
             <SectionTitleLine title={`해지 (${canceledCount}종)`} />
 
             <div className="space-y-3">
-              {canceledCards.map((card) => {
-                const detailHref =
-                  `/main/${childId}/product-list/${card.fundId}` as Route;
-
-                return (
-                  <Link
+              <div className="space-y-3">
+                {canceledCards.map((card) => (
+                  <MyFundDetailCard
                     key={`${card.id}-${card.fundId}`}
-                    href={detailHref}
-                    className="block"
-                    aria-label="펀드 상품 상세로 이동"
-                  >
-                    <MyFundDetailCard
-                      accountId={card.id}
-                      fundId={card.fundId}
-                      variant="canceled"
-                      title={card.title}
-                      tags={card.tags}
-                      totalAmountWonText={card.totalAmountWonText}
-                      profitRateText={card.profitRateText}
-                      monthlyPayWonText={card.monthlyPayWonText}
-                    />
-                  </Link>
-                );
-              })}
+                    accountId={card.id}
+                    fundId={card.fundId}
+                    variant="canceled"
+                    title={card.title}
+                    tags={card.tags}
+                    totalAmountWonText={card.totalAmountWonText}
+                    profitRateText={card.profitRateText}
+                    monthlyPayWonText={card.monthlyPayWonText}
+                  />
+                ))}
+              </div>
             </div>
 
             {hasActive ? (

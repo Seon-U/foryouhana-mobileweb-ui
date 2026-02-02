@@ -1,8 +1,9 @@
 import { InfoIcon } from 'lucide-react';
 import { useState } from 'react';
 import { InputAmount, InputMonth } from '@/components/cmm/InputDayAmount';
+import TitlePlanSelect from '@/components/cmm/TitlePlanSelect';
 import {
-  calculateGiftBenefit,
+  compareGiftTaxByMonthWithPV,
   formatWonDetail,
   formatWonNatural,
 } from '@/lib/utils';
@@ -12,11 +13,9 @@ import { BinaryToggle } from '../../../components/cmm/BinaryToggle';
  * @page: GiftSection
  * @description: GiftSection은 온보딩 내의 플랜 수정 페이지에서 증여 관련 선택 부분을 나타내는 컴포넌트입니다.
  * 유기정기금 사용 여부, 정기 이제 / 자유 이체 방식 선택이 담겨있습니다.
- * @author: 작성자명
+ * @author: 이정수
  * @date: 2026-01-26
  */
-
-const ANNUAL_RATE = 0.03;
 
 export default function GiftSection({
   giftPlan,
@@ -44,16 +43,15 @@ export default function GiftSection({
   return (
     <div className="pt-2">
       <div className="flex items-center gap-1 pb-2">
-        <h2 className="font-hana-light text-xs">유기정기금</h2>
-        <InfoIcon className="h-4 w-4 text-hana-gray-400" />
+        <TitlePlanSelect title="유기정기금" />
         <h2 className="text-[12px]">
           약{' '}
           {formatWonDetail(
-            calculateGiftBenefit({
-              monthlyMoney,
-              inMonth,
-              annualRate: ANNUAL_RATE,
-            }).benefit,
+            compareGiftTaxByMonthWithPV({
+              monthlyAmount: monthlyMoney,
+              months: inMonth,
+              isMinor: true,
+            }).taxDifference,
           )}
           의 증여세를 절감할 수 있어요.
         </h2>
