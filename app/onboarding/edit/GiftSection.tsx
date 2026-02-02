@@ -1,4 +1,3 @@
-import { InfoIcon } from 'lucide-react';
 import { useState } from 'react';
 import { InputAmount, InputMonth } from '@/components/cmm/InputDayAmount';
 import TitlePlanSelect from '@/components/cmm/TitlePlanSelect';

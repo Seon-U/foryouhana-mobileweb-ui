@@ -1,4 +1,3 @@
-import { InfoIcon } from 'lucide-react';
 import TitlePlanSelect from '@/components/cmm/TitlePlanSelect';
 import { BinaryToggle } from '../../../components/cmm/BinaryToggle';
 

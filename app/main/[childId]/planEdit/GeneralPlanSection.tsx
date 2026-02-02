@@ -1,4 +1,3 @@
-import { InfoIcon } from 'lucide-react';
 import AmountChangeInput from '@/components/cmm/AmountChangeInput';
 import { BinaryToggle } from '@/components/cmm/BinaryToggle';
 import { CustomButton } from '@/components/cmm/CustomButton';
