@@ -120,6 +120,7 @@ export async function createChildAndAccount(
             acc_type: account_acc_type.GIFT_DEPOSIT,
             opened_at: new Date(),
             deposit: 0n,
+            target_date: endDate,
             in_type: false, // 정기
             in_month: in_month,
             status: 'ACTIVE',
@@ -143,6 +144,7 @@ export async function createChildAndAccount(
               acc_num: generateSecureAccNum(),
               acc_type: acc_type as account_acc_type,
               opened_at: startDate,
+              target_date: endDate,
               in_month: in_month,
               in_type: in_type,
               deposit: 0n,

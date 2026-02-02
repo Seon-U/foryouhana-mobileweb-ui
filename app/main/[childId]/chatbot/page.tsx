@@ -10,6 +10,13 @@ import Header from '@/components/cmm/Header';
 import InputChat from '@/components/cmm/InputChat';
 import { IMAGES_PATH } from '@/constants/images';
 
+/**
+ * @page: 메인 챗봇
+ * @description: 메인 챗봇페이지 입니다
+ * @author: 승빈
+ * @date: 2026-01-28
+ */
+
 type Message = {
   id: number;
   role: 'user' | 'ai';
@@ -30,8 +37,8 @@ export default function ChatbotSignProcess() {
 
   // 1. 자산/수입 상태를 추적하기 위한 State 추가 (기본값 설정)
   const [parentFinance, setParentFinance] = useState({
-    income: 60000000,
-    assets: 300000000,
+    income: 50000000, //연봉
+    assets: 100000000, //자산
   });
 
   const [messages, setMessages] = useState<Message[]>([

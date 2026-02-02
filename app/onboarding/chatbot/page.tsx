@@ -30,25 +30,114 @@ export default function chatbotSignProcess() {
   const route = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // 1. 자산/수입 상태를 추적하기 위한 State 추가
+  // 1. 자산/수입 상태 (마이데이터 하드코딩 값)
   const [parentFinance, setParentFinance] = useState({
-    income: 60000000,
-    assets: 300000000,
+    income: 50000000, //연봉
+    assets: 100000000, //자산
   });
 
-  // 초기 메시지
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      role: 'ai',
-      mainTitle: '안녕하세요! 자녀 증여 플래너 별벗입니다',
-      content:
-        "자녀분의 나이와 부모님의 재정 상황을 고려해 최적의 증여 플랜을 짜드릴게요.\n\n예) '다음 달 승진해서 월급 300 오르는데 증여 얼마 할까?' 처럼 편하게 물어보세요!",
-      isScenario: false,
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const [loading, setLoading] = useState(false);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 페이지 진입시 1회 실행 (마이데이터 기반 플랜 먼저 제시)
+  useEffect(() => {
+    const fetchInitialPlan = async () => {
+      setLoading(true);
+      try {
+        // 세션에서 자녀 나이 가져오기 (없으면 0)
+        const storedData = sessionStorage.getItem('giftPlan');
+        let currentChildAge = 0;
+        if (storedData) {
+          const parsed = JSON.parse(storedData);
+          currentChildAge = parsed.plan?.child_birth?.age ?? 0;
+        }
+
+        // 초기 데이터로 즉시 분석 요청
+        const res = await fetch('/api/chatbot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            childId: null,
+            // AI에게 초기 분석을 요청하는 내부 프롬프트
+            userInput:
+              '현재 내 소득과 자산을 기준으로 최적의 초기 증여 플랜을 제안해줘.',
+            parentIncome: parentFinance.income,
+            parentAssets: parentFinance.assets,
+            childAge: currentChildAge,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          // 에러 시 기본 인사말로 대체
+          setMessages([
+            {
+              id: 1,
+              role: 'ai',
+              mainTitle: '안녕하세요! 자녀 증여 플래너 별벗입니다',
+              content:
+                "자녀분의 나이와 부모님의 재정 상황을 고려해 최적의 증여 플랜을 짜드릴게요.\n\n예) '다음 달 승진해서 월급 300 오르는데 증여 얼마 할까?' 처럼 편하게 물어보세요!",
+              isScenario: false,
+            },
+          ]);
+        } else {
+          const summaryText = `
+
+${data.explanation}
+
+✅ 추천 증여기간: ${data.periodYears}년
+💰 월 증여액: ${data.monthlyGift.toLocaleString()}원
+🎁 총 증여액: ${data.totalGift.toLocaleString()}원
+${data.useYugi ? '📝 유기정기금 신고: 추천' : ''}
+${data.usePensionFund ? '💸 연금저축펀드: 추천' : ''}
+──────────────────
+
+추가적인 자산 변동사항이 있다면 적어주세요! 그에 맞게 수정해드릴께요!
+
+`.trim();
+
+          setMessages([
+            {
+              id: 1,
+              role: 'ai',
+              mainTitle: '현재 수집된 마이데이터 기반 증여플랜이에요!', // 요청하신 메인 타이틀
+              content: summaryText,
+              isScenario: false,
+            },
+          ]);
+
+          // 초기 분석 결과도 세션에 저장 (선택 사항)
+          if (data.dbData) {
+            setParentFinance({
+              income: data.dbData.updatedIncome,
+              assets: data.dbData.updatedAssets,
+            });
+            // ... 세션 저장 로직이 필요하다면 여기 추가
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        // 에러 발생 시 기본 메시지
+        setMessages([
+          {
+            id: 1,
+            role: 'ai',
+            mainTitle: '안녕하세요! 자녀 증여 플래너 별벗입니다',
+            content:
+              '데이터를 불러오는 중 문제가 발생했어요. 궁금한 점을 직접 물어봐주세요!',
+            isScenario: false,
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialPlan();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 스크롤 자동 이동
   useEffect(() => {
@@ -135,7 +224,9 @@ export default function chatbotSignProcess() {
         const summaryText = `
 ${data.explanation}
 
+
 ──────────────────
+
 
 ✅ 추천 증여기간: ${data.periodYears}년
 💰 월 증여액: ${data.monthlyGift.toLocaleString()}원
