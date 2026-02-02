@@ -210,7 +210,7 @@ export default function AnalysisResult() {
 
           <CustomButton
             preset="greenlong"
-            onClick={() => router.push('/register/guide')}
+            onClick={() => router.push('/register/verification/child-info')}
           >
             다음
           </CustomButton>

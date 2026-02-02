@@ -21,7 +21,7 @@ export default function familyCheckPage() {
   const [isAgreed, setIsAgreed] = useState<boolean>(false);
   const router = useRouter();
   const handleNext = () => {
-    router.push('/register/verification/verify-list');
+    router.push('/register/verification/verify-complete');
   };
 
   return (
@@ -87,7 +87,7 @@ export default function familyCheckPage() {
           disabled={!isAgreed}
           onClick={handleNext}
         >
-          다음
+          우리 아이 계좌 개설하기
         </CustomButton>
       </div>
     </div>
