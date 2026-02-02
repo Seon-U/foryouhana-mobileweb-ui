@@ -85,8 +85,6 @@ export default function HomeClientWrapper({
           kids={kidsChartData}
         />
       )}
-
-      <BottomNavBar />
     </div>
   );
 }
